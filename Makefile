@@ -68,7 +68,7 @@ header :
 
 clean :
 		@$(RM) $(OBJ_DIR)
-		@$(MAKE) $(shell dirname $(DEPENDENCIES)) fclean
+		@$(MAKE) $(shell dirname $(FT_LIBC)) fclean
 
 fclean : clean
 		@$(RM) $(NAME)
