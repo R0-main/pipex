@@ -2,6 +2,7 @@
 	"files.associations": {
 		"env.h": "c",
 		"stdio.h": "c",
-		"fcntl.h": "c"
+		"fcntl.h": "c",
+		"unistd.h": "c"
 	}
 }

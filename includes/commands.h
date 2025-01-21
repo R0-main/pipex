@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   commands.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 08:54:42 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/21 14:13:40 by rguigneb         ###   ########.fr       */
+/*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
+/*   Updated: 2025/01/21 14:12:47 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
-
-# include <stdlib.h>
+#ifndef PIPEX_H
+# define PIPEX_H
 
 /******************************************************************************/
-const char	*get_env(const char *variable, const char **envp);
+void	exec_command(const char **argv, const char **envp);
 
 #endif
