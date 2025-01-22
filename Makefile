@@ -36,7 +36,7 @@ OBJS				=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 OBJ_DIR				=	objects
 
-all : header $(OBJ_DIR) $(FT_LIBC)
+all : header $(FT_LIBC) $(OBJ_DIR)
 	$(CC) $(CFLAGS) $(OBJS) $(FT_LIBC) -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.c
@@ -52,6 +52,9 @@ $(OBJ_DIR): $(OBJS)
 		@printf "\n"
 
 $(FT_LIBC) :
+	@if [ ! -e "$(shell dirname $@)" ]; then \
+		git clone git@github.com:R0-main/ft_libc.git $(shell dirname $@); \
+	fi;
 	$(MAKE) $(shell dirname $@)
 
 header :
