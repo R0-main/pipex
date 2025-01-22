@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 09:47:54 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 12:36:40 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,50 +23,35 @@ static char	*get_full_path(const char *path)
 	return (ft_strjoin(path, "/"));
 }
 
-void	exec_command(const char **argv, const char **envp, int pipe[2])
+void	exec_command(command_t *command, pipe_t pipes)
 {
 	pid_t	fork_id;
 	char	**path_env;
 	int		i;
-	char	*command;
+	char	*command_name;
 	char	*path;
 	char	c;
 
-
-	fork_id = fork();
 	i = 0;
+	fork_id = fork();
 	if (fork_id == 0)
 	{
-		printf("wqfqfqfq\n\n\n\n");
-		dup2(pipe[0], STDIN_FILENO);
-		dup2(STDOUT_FILENO, pipe[1]);
-		close(pipe[0]);
-		close(pipe[1]);
-		path_env = ft_split(get_env("PATH", envp), ':');
+		printf("read : %d | write %d\n", pipes.read, pipes.write);
+		dup2(pipes.read, STDIN_FILENO);
+		dup2(STDOUT_FILENO, pipes.write);
+		close(pipes.write);
+		close(pipes.read);
+		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
 		while (path_env[i])
 		{
 			path = get_full_path(path_env[i]);
-			command = ft_strjoin(path, argv[0]);
+			command_name = ft_strjoin(path, command->argv[0]);
 			free(path);
 			free(path_env[i++]);
-			execve(command, (char *const *)argv, (char *const *)envp);
-			free(command);
+			execve(command_name, (char *const *)command->argv,
+				(char *const *)command->envp);
+			free(command_name);
 		}
 		free(path_env);
 	}
-	else
-	{
-		write(pipe[1], "test text\nwhere it has some tex fqfqft\n", 39);
-		close(pipe[1]); // Close the write-end to signal EOF
-		wait(NULL);
-		while (read(pipe[0], &c, 1))
-		{
-			// write(1, "here : \n", 9);
-			write(1, &c, 1);
-		}
-		close(pipe[0]);
-		// write(1, &c, 1);
-	}
-	close(pipe[1]); // Close the write-end to signal EOF
-	close(pipe[0]); // Close the write-end to signal EOF
 }

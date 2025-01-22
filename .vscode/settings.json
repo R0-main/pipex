@@ -4,6 +4,11 @@
 		"stdio.h": "c",
 		"fcntl.h": "c",
 		"unistd.h": "c",
-		"pipex.h": "c"
+		"pipex.h": "c",
+		"commands.h": "c",
+		"ft_printf.h": "c",
+		"libft.h": "c",
+		"stdlib.h": "c",
+		"wait.h": "c"
 	}
 }

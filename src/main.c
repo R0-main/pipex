@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 09:47:43 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 12:35:58 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,71 @@
 #include "libft.h"
 #include "pipex.h"
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-static void	handle_commands(const char *in_file, const char *out_file,
-		char const *arg, char const **envp)
+static void	proccess_command_queue(pipex_data_t *data)
 {
-	char	**command;
+	pipe_t	cmd_pipe;
+	t_list	*current;
+	bool	first;
 	int		fd;
-	char	*trim;
-	if (pipe(fd) == -1)
-		ft_printf("ERROR at Pipe in exec_command");
-	trim = ft_strtrim(arg, "\n\r\t\v ");
-	command = ft_split(trim, ' ');
-	free(trim);
-	exec_command((const char **)command, envp);
-	free_split_until_end(command, 0);
+	int		old_read;
+	char	c;
+
+	first = true;
+	current = data->commands_queue;
+	while (current)
+	{
+		if (pipe((int *)(&cmd_pipe)) == -1)
+			return ;
+		printf("command : %s\n", ((command_t *)current->content)->argv[0]);
+		if (first)
+		{
+			first = false;
+			ft_printf("execute with file as input : \n");
+			fd = open("file1", O_RDONLY);
+			exec_command(current->content, (pipe_t){fd, cmd_pipe.write});
+			close(fd);
+		}
+		else
+		{
+			ft_printf("execute with previews command output as input : \n");
+			exec_command(current->content, cmd_pipe);
+		}
+		wait(NULL);
+		close(cmd_pipe.write);
+		ft_printf("Here : \n");
+		while (read(cmd_pipe.read, &c, 1))
+			write(1, &c, 1);
+		if (current->next)
+			exec_command(current->next->content, cmd_pipe);
+		close(cmd_pipe.read);
+		close(cmd_pipe.write);
+		current = current->next;
+	}
+}
+
+static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
+{
+	command_t	*command;
+	t_list		*lst;
+	char		*trimmed;
+
+	command = (command_t *)malloc(sizeof(command_t));
+	if (!command)
+		return ;
+	lst = ft_lstnew(command);
+	if (!lst)
+		return ;
+	trimmed = ft_strtrim(argv, "\n\r\t\v ");
+	command->argv = ft_split(trimmed, ' ');
+	command->envp = envp;
+	free(trimmed);
+	ft_lstadd_back(&data->commands_queue, lst);
 }
 
 int	main(int argc, char const **argv, char const **envp)
@@ -44,7 +91,7 @@ int	main(int argc, char const **argv, char const **envp)
 	pipex_data_t	data;
 	int				i;
 
-	i = 1;
+	i = 2;
 	if (argc < 4)
 	{
 		printf("argc error");
@@ -60,17 +107,16 @@ int	main(int argc, char const **argv, char const **envp)
 	data.argc = argc;
 	data.argv = argv;
 	data.envp = envp;
+	data.commands_queue = NULL;
 	// fd2 = open(data.out_file, O_WRONLY);
 	// dup2(fd2, 1);
-	// while (i < argc - 3)
-	// {
-	// 	if (i == 1)
-	// 		handle_commands(data.in_file, data.out_file, argv[i], envp);
-	// 	else
-	// 		handle_commands(data.out_file, data.out_file, argv[i], envp);
-	// 	i++;
-	// }
-	handle_commands(data.out_file, data.out_file, argv[2], envp);
+	while (i < argc - 1)
+	{
+		add_to_commands_queue(&data, (char *)argv[i], (char **)envp);
+		i++;
+	}
+	proccess_command_queue(&data);
+	// handle_commands(data.out_file, data.out_file, argv[2], envp);
 	// close(fd2);
 	// write(1, "fwfq\n\n", 6);
 	// exec = execve("/usr/bin/ls", argt, envp);
