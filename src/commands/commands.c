@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 14:28:01 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:17:00 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	exec_command(command_t *command, pipe_t in_pipe, pipe_t out_pipe)
 		// printf("read : %d | write %d\n", pipes.read, pipes.write);
 		dup2(in_pipe.read, STDIN_FILENO);
 		dup2(out_pipe.write, STDOUT_FILENO);
+		close(in_pipe.read);
+		close(out_pipe.write);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
 		while (path_env[i])
 		{
@@ -53,8 +55,6 @@ void	exec_command(command_t *command, pipe_t in_pipe, pipe_t out_pipe)
 			free(command_name);
 		}
 		free(path_env);
-		close(in_pipe.read);
-		close(out_pipe.write);
 		exit(EXIT_FAILURE);
 	}
 }

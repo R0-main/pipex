@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 14:33:01 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:17:14 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+// AWK ERROR ?
 static void	proccess_command_queue(pipex_data_t *data)
 {
 	pipe_t	parent_to_child;
@@ -35,50 +36,42 @@ static void	proccess_command_queue(pipex_data_t *data)
 
 	first = true;
 	current = data->commands_queue;
-	while (current)
+	child_to_parent = (pipe_t){0, 0};
+	while (current && current->content)
 	{
 		if (pipe((int *)(&parent_to_child)) == -1)
 			return ;
-		if (pipe((int *)(&child_to_parent)) == -1)
-			return ;
-		// printf("command : %s\n", ((command_t *)current->content)->argv[0]);
-		if (first)
+		if (child_to_parent.read)
 		{
-			first = false;
-			ft_printf("execute with file as input : \n");
-			fd = open("file1", O_RDONLY);
+			close(child_to_parent.write);
+			while (read(child_to_parent.read, &c, 1))
+				write(parent_to_child.write, &c, 1);
+			close(child_to_parent.read);
+		}
+		else
+		{
+			fd = open(data->in_file, O_RDONLY);
 			while (read(fd, &c, 1))
 				write(parent_to_child.write, &c, 1);
 			close(fd);
 		}
-		close(parent_to_child.write);
-		exec_command(current->content, parent_to_child, child_to_parent);
-		close(parent_to_child.read);
-		close(child_to_parent.write);
-		wait(NULL);
-		if (pipe((int *)(&parent_to_child)) == -1)
-			return ;
-		while (read(child_to_parent.read, &c, 1))
-		{
-			write(parent_to_child.write, &c, 1);
-		}
-		close(child_to_parent.read);
-		close(parent_to_child.write);
 		if (pipe((int *)(&child_to_parent)) == -1)
 			return ;
-		if (current->next && current->next->content)
-			exec_command(current->next->content, parent_to_child,
-				child_to_parent);
-		wait(NULL);
-		close(child_to_parent.write);
+		close(parent_to_child.write);
+		exec_command(current->content, parent_to_child, child_to_parent);
+		free_split_until_end(((command_t *)current->content)->argv, 0);
 		close(parent_to_child.read);
-		while (read(child_to_parent.read, &c, 1))
+		close(child_to_parent.write);
+		if (!current->next)
 		{
-			write(1, &c, 1);
+			fd = open(data->out_file, O_WRONLY);
+			while (read(child_to_parent.read, &c, 1))
+				write(1, &c, 1);
+			close(fd);
 		}
-		close(child_to_parent.read);
 		current = current->next;
 	}
+	close(child_to_parent.read);
 }
 
 static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
@@ -95,6 +88,7 @@ static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
 		return ;
 	trimmed = ft_strtrim(argv, "\n\r\t\v ");
 	command->argv = ft_split(trimmed, ' ');
+	// better parsing
 	command->envp = envp;
 	free(trimmed);
 	ft_lstadd_back(&data->commands_queue, lst);
@@ -124,51 +118,12 @@ int	main(int argc, char const **argv, char const **envp)
 	data.argv = argv;
 	data.envp = envp;
 	data.commands_queue = NULL;
-	// fd2 = open(data.out_file, O_WRONLY);
-	// dup2(fd2, 1);
 	while (i < argc - 1)
 	{
 		add_to_commands_queue(&data, (char *)argv[i], (char **)envp);
 		i++;
 	}
 	proccess_command_queue(&data);
-	// handle_commands(data.out_file, data.out_file, argv[2], envp);
-	// close(fd2);
-	// write(1, "fwfq\n\n", 6);
-	// exec = execve("/usr/bin/ls", argt, envp);
-	// close(fd2);
-	// printf("===== fwqfqfqfq %d\n", exec);
+	ft_lstclear(&data.commands_queue, free);
 	return (0);
 }
-
-// int	main(int argc, char const *argv[])
-// {
-// 	int	i;
-// 	int	y;
-
-// 	i = 0;
-// 	if (argc == 2)
-// 	{
-// 		while (argv[1][i])
-// 		{
-// 			if (argv[1][i] >= 'A' && argv[1][i] <= 'Z')
-// 				y = 'A';
-// 			else
-// 				y = 'a';
-// 			if ((argv[1][i] >= 'a' && argv[1][i] <= 'z') || (argv[1][i] >= 'A'
-// 					&& argv[1][i] <= 'Z'))
-// 			{
-// 				while (y <= argv[1][i])
-// 				{
-// 					y++;
-// 					write(1, &argv[1][i], 1);
-// 				}
-// 				write(1, "\n", 1);
-// 			}
-// 			i++;
-// 		}
-// 	}
-// 	else
-// 		write(1, "\n", 1);
-// 	return (0);
-// }
