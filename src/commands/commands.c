@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 12:36:40 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:28:01 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	*get_full_path(const char *path)
 	return (ft_strjoin(path, "/"));
 }
 
-void	exec_command(command_t *command, pipe_t pipes)
+void	exec_command(command_t *command, pipe_t in_pipe, pipe_t out_pipe)
 {
 	pid_t	fork_id;
 	char	**path_env;
@@ -36,11 +36,11 @@ void	exec_command(command_t *command, pipe_t pipes)
 	fork_id = fork();
 	if (fork_id == 0)
 	{
-		printf("read : %d | write %d\n", pipes.read, pipes.write);
-		dup2(pipes.read, STDIN_FILENO);
-		dup2(STDOUT_FILENO, pipes.write);
-		close(pipes.write);
-		close(pipes.read);
+		close(out_pipe.read);
+		close(in_pipe.write);
+		// printf("read : %d | write %d\n", pipes.read, pipes.write);
+		dup2(in_pipe.read, STDIN_FILENO);
+		dup2(out_pipe.write, STDOUT_FILENO);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
 		while (path_env[i])
 		{
@@ -53,5 +53,8 @@ void	exec_command(command_t *command, pipe_t pipes)
 			free(command_name);
 		}
 		free(path_env);
+		close(in_pipe.read);
+		close(out_pipe.write);
+		exit(EXIT_FAILURE);
 	}
 }

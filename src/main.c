@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 12:35:58 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:33:01 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
 
 static void	proccess_command_queue(pipex_data_t *data)
 {
-	pipe_t	cmd_pipe;
+	pipe_t	parent_to_child;
+	pipe_t	child_to_parent;
 	t_list	*current;
 	bool	first;
 	int		fd;
@@ -36,31 +37,46 @@ static void	proccess_command_queue(pipex_data_t *data)
 	current = data->commands_queue;
 	while (current)
 	{
-		if (pipe((int *)(&cmd_pipe)) == -1)
+		if (pipe((int *)(&parent_to_child)) == -1)
 			return ;
-		printf("command : %s\n", ((command_t *)current->content)->argv[0]);
+		if (pipe((int *)(&child_to_parent)) == -1)
+			return ;
+		// printf("command : %s\n", ((command_t *)current->content)->argv[0]);
 		if (first)
 		{
 			first = false;
 			ft_printf("execute with file as input : \n");
 			fd = open("file1", O_RDONLY);
-			exec_command(current->content, (pipe_t){fd, cmd_pipe.write});
+			while (read(fd, &c, 1))
+				write(parent_to_child.write, &c, 1);
 			close(fd);
 		}
-		else
-		{
-			ft_printf("execute with previews command output as input : \n");
-			exec_command(current->content, cmd_pipe);
-		}
+		close(parent_to_child.write);
+		exec_command(current->content, parent_to_child, child_to_parent);
+		close(parent_to_child.read);
+		close(child_to_parent.write);
 		wait(NULL);
-		close(cmd_pipe.write);
-		ft_printf("Here : \n");
-		while (read(cmd_pipe.read, &c, 1))
+		if (pipe((int *)(&parent_to_child)) == -1)
+			return ;
+		while (read(child_to_parent.read, &c, 1))
+		{
+			write(parent_to_child.write, &c, 1);
+		}
+		close(child_to_parent.read);
+		close(parent_to_child.write);
+		if (pipe((int *)(&child_to_parent)) == -1)
+			return ;
+		if (current->next && current->next->content)
+			exec_command(current->next->content, parent_to_child,
+				child_to_parent);
+		wait(NULL);
+		close(child_to_parent.write);
+		close(parent_to_child.read);
+		while (read(child_to_parent.read, &c, 1))
+		{
 			write(1, &c, 1);
-		if (current->next)
-			exec_command(current->next->content, cmd_pipe);
-		close(cmd_pipe.read);
-		close(cmd_pipe.write);
+		}
+		close(child_to_parent.read);
 		current = current->next;
 	}
 }

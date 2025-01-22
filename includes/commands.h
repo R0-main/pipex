@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 11:51:41 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:18:39 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef struct command_s
 }			command_t;
 
 /******************************************************************************/
-void		exec_command(command_t *command, pipe_t pipes);
-
+void		exec_command(command_t *command, pipe_t in_pipe, pipe_t out_pipe);
 
 #endif
