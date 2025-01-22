@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/21 15:59:05 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:47:43 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,26 @@
 #include "ft_printf.h"
 #include "get_next_line.h"
 #include "libft.h"
+#include "pipex.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "pipex.h"
 
-static void	handle_commands(void)
+static void	handle_commands(const char *in_file, const char *out_file,
+		char const *arg, char const **envp)
 {
+	char	**command;
+	int		fd;
+	char	*trim;
+	if (pipe(fd) == -1)
+		ft_printf("ERROR at Pipe in exec_command");
+	trim = ft_strtrim(arg, "\n\r\t\v ");
+	command = ft_split(trim, ' ');
+	free(trim);
+	exec_command((const char **)command, envp);
+	free_split_until_end(command, 0);
 }
 
 int	main(int argc, char const **argv, char const **envp)
@@ -31,7 +42,9 @@ int	main(int argc, char const **argv, char const **envp)
 	int				fd[2];
 	int				fd2;
 	pipex_data_t	data;
+	int				i;
 
+	i = 1;
 	if (argc < 4)
 	{
 		printf("argc error");
@@ -47,11 +60,21 @@ int	main(int argc, char const **argv, char const **envp)
 	data.argc = argc;
 	data.argv = argv;
 	data.envp = envp;
-	// fd2 = open("test.txt", O_WRONLY | O_APPEND);
-	// close(fd2);
+	// fd2 = open(data.out_file, O_WRONLY);
 	// dup2(fd2, 1);
+	// while (i < argc - 3)
+	// {
+	// 	if (i == 1)
+	// 		handle_commands(data.in_file, data.out_file, argv[i], envp);
+	// 	else
+	// 		handle_commands(data.out_file, data.out_file, argv[i], envp);
+	// 	i++;
+	// }
+	handle_commands(data.out_file, data.out_file, argv[2], envp);
+	// close(fd2);
 	// write(1, "fwfq\n\n", 6);
 	// exec = execve("/usr/bin/ls", argt, envp);
+	// close(fd2);
 	// printf("===== fwqfqfqfq %d\n", exec);
 	return (0);
 }
