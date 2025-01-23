@@ -6,15 +6,16 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:54:01 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/21 09:21:44 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 08:25:45 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
+#include "libft.h"
 
 static char	*serialized_variable(const char *variable, const char *line)
 {
-	return (line + ft_strlen(variable) + 1);
+	return ((char *)line + ft_strlen(variable) + 1);
 }
 
 static char	*get_target_string(const char *variable)

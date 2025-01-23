@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 16:17:14 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 10:38:23 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
 {
 	command_t	*command;
 	t_list		*lst;
-	char		*trimmed;
 
 	command = (command_t *)malloc(sizeof(command_t));
 	if (!command)
@@ -86,18 +85,14 @@ static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
 	lst = ft_lstnew(command);
 	if (!lst)
 		return ;
-	trimmed = ft_strtrim(argv, "\n\r\t\v ");
-	command->argv = ft_split(trimmed, ' ');
-	// better parsing
+
+	command->argv = get_parsed_command(argv);
 	command->envp = envp;
-	free(trimmed);
 	ft_lstadd_back(&data->commands_queue, lst);
 }
 
 int	main(int argc, char const **argv, char const **envp)
 {
-	int				fd[2];
-	int				fd2;
 	pipex_data_t	data;
 	int				i;
 
