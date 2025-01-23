@@ -29,6 +29,8 @@ SRCS				=	src/main.c\
 						src/test.c\
 						src/commands/commands.c\
 						src/parsing/parsing.c\
+						src/parsing/utils.c\
+						src/garbadge_collector/garbadge.c\
 						src/env/variables.c
 
 SRC_COUNT			=	$(words $(SRCS))

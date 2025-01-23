@@ -6,12 +6,16 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 10:53:24 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 14:53:53 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
+
+# include "libft.h"
+# include "strings.h"
+# include <stdbool.h>
 
 /******************************************************************************/
 typedef struct pipex_data_s
@@ -23,5 +27,13 @@ typedef struct pipex_data_s
 	const char	*out_file;
 	t_list		*commands_queue;
 }				pipex_data_t;
+
+/*******************************parsing****************************************/
+int				get_next_space_char_index(char *str);
+int				get_next_char_index(char *str, int c);
+bool			char_exist_in(char *str, int c);
+bool			not_only_spaces_until_end(char *str);
+
+char			**get_parsed_command(char *argv);
 
 #endif

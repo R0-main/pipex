@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 10:38:23 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:34:49 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "garbadge.h"
 
 // AWK ERROR ?
 static void	proccess_command_queue(pipex_data_t *data)
@@ -29,6 +30,7 @@ static void	proccess_command_queue(pipex_data_t *data)
 	pipe_t	parent_to_child;
 	pipe_t	child_to_parent;
 	t_list	*current;
+	t_list	*tmp;
 	bool	first;
 	int		fd;
 	int		old_read;
@@ -59,7 +61,6 @@ static void	proccess_command_queue(pipex_data_t *data)
 			return ;
 		close(parent_to_child.write);
 		exec_command(current->content, parent_to_child, child_to_parent);
-		free_split_until_end(((command_t *)current->content)->argv, 0);
 		close(parent_to_child.read);
 		close(child_to_parent.write);
 		if (!current->next)
@@ -69,6 +70,7 @@ static void	proccess_command_queue(pipex_data_t *data)
 				write(1, &c, 1);
 			close(fd);
 		}
+		tmp = current;
 		current = current->next;
 	}
 	close(child_to_parent.read);
@@ -79,16 +81,25 @@ static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
 	command_t	*command;
 	t_list		*lst;
 
-	command = (command_t *)malloc(sizeof(command_t));
+	command = (command_t *)safe_malloc(sizeof(command_t));
 	if (!command)
-		return ;
+		safe_exit();
 	lst = ft_lstnew(command);
 	if (!lst)
-		return ;
-
+		safe_exit();
+	// add_to_garbadge(lst);
 	command->argv = get_parsed_command(argv);
 	command->envp = envp;
 	ft_lstadd_back(&data->commands_queue, lst);
+}
+
+void	free_command(command_t *command)
+{
+	if (!command || !command->argv)
+		return ;
+	if (command->argv)
+		free_split_until_end(command->argv, 0);
+	free(command);
 }
 
 int	main(int argc, char const **argv, char const **envp)
@@ -114,11 +125,9 @@ int	main(int argc, char const **argv, char const **envp)
 	data.envp = envp;
 	data.commands_queue = NULL;
 	while (i < argc - 1)
-	{
-		add_to_commands_queue(&data, (char *)argv[i], (char **)envp);
-		i++;
-	}
+		add_to_commands_queue(&data, (char *)argv[i++], (char **)envp);
 	proccess_command_queue(&data);
-	ft_lstclear(&data.commands_queue, free);
+	free_garbadge();
+	// ft_lstclear(&data.commands_queue, (void (*)(void *))free_command);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:54:01 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 08:25:45 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:51:02 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ const char	*get_env(const char *variable, const char **envp)
 	char	*target;
 
 	i = -1;
-	if (!envp || !variable)
+	if (!envp || !*envp || !variable)
 		return (NULL);
 	target = get_target_string(variable);
 	while (envp[++i])

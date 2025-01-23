@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/22 16:17:00 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 13:53:08 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,12 @@ void	exec_command(command_t *command, pipe_t in_pipe, pipe_t out_pipe)
 	{
 		close(out_pipe.read);
 		close(in_pipe.write);
-		// printf("read : %d | write %d\n", pipes.read, pipes.write);
 		dup2(in_pipe.read, STDIN_FILENO);
 		dup2(out_pipe.write, STDOUT_FILENO);
 		close(in_pipe.read);
 		close(out_pipe.write);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
-		while (path_env[i])
+		while (path_env && path_env[i])
 		{
 			path = get_full_path(path_env[i]);
 			command_name = ft_strjoin(path, command->argv[0]);
