@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 08:26:50 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 12:18:06 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 12:22:18 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,11 +156,11 @@ char	**get_parsed_command(char *argv)
 	// set final to null
 	while (argv[++i])
 	{
-		printf("%s\n", argv + i);
+		// printf("%s\n", argv + i);
 		if (flags.command.finished == false)
 		{
 			final[0] = ft_substr(argv, 0, get_next_space_char_index(argv));
-			i += get_next_space_char_index(argv) + 1;
+			i += get_next_space_char_index(argv);
 			flags.command.finished = true;
 		}
 		if (ft_isspace(argv[i]))
@@ -206,10 +206,10 @@ char	**get_parsed_command(char *argv)
 	}
 	final[args_count] = NULL;
 	d = 0;
-	while (final[d])
-	{
-		printf("args : %s|\n", final[d]);
-		d++;
-	}
+	// while (final[d])
+	// {
+	// 	printf("args : %s|\n", final[d]);
+	// 	d++;
+	// }
 	return (final);
 }
