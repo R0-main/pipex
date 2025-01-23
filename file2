@@ -1,12 +1,3 @@
-total 64
--rwxr-xr-x 1 rguigneb 2024_paris 15920 Jan 21 12:30 a.out
-drwxr-xr-x 3 rguigneb 2024_paris    21 Jan 23 09:11 dependencies
--rw-r--r-- 1 rguigneb 2024_paris    56 Jan 22 12:17 file1
--rw-r--r-- 1 rguigneb 2024_paris     0 Jan 23 13:47 file2
-drwxr-xr-x 2 rguigneb 2024_paris    52 Jan 21 14:10 includes
--rw-r--r-- 1 rguigneb 2024_paris  1927 Jan 23 08:37 Makefile
-drwxr-xr-x 3 rguigneb 2024_paris    17 Jan 23 12:30 objects
--rwxr-xr-x 1 rguigneb 2024_paris 29800 Jan 23 13:45 pipex
--rw-r--r-- 1 rguigneb 2024_paris     8 Jan 20 09:18 README.md
-drwxr-xr-x 5 rguigneb 2024_paris    76 Jan 23 08:26 src
--rw-r--r-- 1 rguigneb 2024_paris   526 Jan 21 12:41 test.txt
+test$
+fwfqfq test$
+test ls$

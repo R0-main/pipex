@@ -6,13 +6,14 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 15:34:49 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:49:43 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
 #include "env.h"
 #include "ft_printf.h"
+#include "garbadge.h"
 #include "get_next_line.h"
 #include "libft.h"
 #include "pipex.h"
@@ -22,7 +23,6 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "garbadge.h"
 
 // AWK ERROR ?
 static void	proccess_command_queue(pipex_data_t *data)
@@ -41,11 +41,11 @@ static void	proccess_command_queue(pipex_data_t *data)
 	child_to_parent = (pipe_t){0, 0};
 	while (current && current->content)
 	{
+		printf("fwqfqffq\n");
 		if (pipe((int *)(&parent_to_child)) == -1)
 			return ;
 		if (child_to_parent.read)
 		{
-			close(child_to_parent.write);
 			while (read(child_to_parent.read, &c, 1))
 				write(parent_to_child.write, &c, 1);
 			close(child_to_parent.read);
@@ -87,7 +87,7 @@ static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
 	lst = ft_lstnew(command);
 	if (!lst)
 		safe_exit();
-	// add_to_garbadge(lst);
+	add_to_garbadge(lst);
 	command->argv = get_parsed_command(argv);
 	command->envp = envp;
 	ft_lstadd_back(&data->commands_queue, lst);
@@ -124,6 +124,8 @@ int	main(int argc, char const **argv, char const **envp)
 	data.argv = argv;
 	data.envp = envp;
 	data.commands_queue = NULL;
+	// if (!access(data.in_file, F_OK))
+	// 	data.in_file = NULL;
 	while (i < argc - 1)
 		add_to_commands_queue(&data, (char *)argv[i++], (char **)envp);
 	proccess_command_queue(&data);

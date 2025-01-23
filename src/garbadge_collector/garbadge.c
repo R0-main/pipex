@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 14:55:20 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 15:25:17 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:38:24 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	free_garbadge(void)
 		free(lst);
 		lst = tmp;
 	}
-	free(*garbage_head);
 }
 
 void	safe_free(void *pointer)
@@ -96,7 +95,6 @@ void	safe_free(void *pointer)
 			if (prev)
 				prev->next = lst->next;
 			free(lst);
-			printf("fwqfqfq");
 			break ;
 		}
 		prev = lst;

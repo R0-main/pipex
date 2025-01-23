@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 08:26:50 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 15:34:46 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:41:40 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ char	**get_parsed_command(char *argv)
 
 	i = -1;
 	head = NULL;
-	safe_exit();
 	while (argv[++i])
 	{
 		if (!head)
