@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/24 14:09:30 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 15:43:24 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,25 @@ static void	link_commands_pipes(pipex_data_t *data)
 		prev = command;
 		current = current->next;
 	}
+	prev->out_pipe.write = 1;
+}
+
+static void	close_all_pipes(pipex_data_t *data)
+{
+	t_list		*current;
+	command_t	*command;
+
+	current = data->commands_queue;
+	while (current && current->content)
+	{
+		command = (command_t *)current->content;
+		if (current->next)
+		{
+			close(command->in_pipe.read);
+		}
+		close(command->in_pipe.write);
+		current = current->next;
+	}
 }
 
 static void	proccess_command_queue(pipex_data_t *data)
@@ -73,6 +92,7 @@ static void	proccess_command_queue(pipex_data_t *data)
 	int			fd;
 	int			old_read;
 	char		c;
+	int			d;
 
 	current = data->commands_queue;
 	prev = NULL;
@@ -90,22 +110,29 @@ static void	proccess_command_queue(pipex_data_t *data)
 	while (current && current->content)
 	{
 		command = (command_t *)current->content;
-		printf("in_read : %d , in_write : %d | out_read : %d , out_write : %d\n", command->in_pipe.read, command->in_pipe.write,
-			command->out_pipe.read, command->out_pipe.write);
+		
 		exec_command(command);
 		current = current->next;
 		prev = command;
 	}
-	if (prev)
-	{
-		close(command->out_pipe.write);
-		close(command->in_pipe.write);
-		close(command->in_pipe.read);
-		fd = open(data->out_file, O_WRONLY);
-		while (read(prev->out_pipe.read, &c, 1))
-			write(1, &c, 1);
-		close(fd);
-	}
+	// pid_t child_pid, wpid;
+	// int status = 0;
+	// while ((wpid = wait(&status)) > 0);
+	close_all_pipes(data);
+	// if (prev)
+	// {
+	// 	close(command->out_pipe.write);
+	// 	close(command->in_pipe.write);
+	// 	close(command->in_pipe.read);
+	// 	fd = open(data->out_file, O_WRONLY);
+	// 	d = 1;
+	// 	while (d > 0)
+	// 	{
+	// 		d = read(prev->out_pipe.read, &c, 1);
+	// 		write(1, &c, 1);
+	// 	}
+	// 	close(fd);
+	// }
 }
 
 static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)

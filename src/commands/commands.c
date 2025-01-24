@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/24 14:06:34 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 15:44:07 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,13 @@ void	exec_command(command_t *command)
 	if (fork_id == 0)
 	{
 		reset_garbadge();
+		printf("in_read : %d , in_write : %d | out_read : %d , out_write : %d\n", command->in_pipe.read, command->in_pipe.write,
+			command->out_pipe.read, command->out_pipe.write);
+		// write()
+		close(command->in_pipe.write);
+		close(command->out_pipe.read);
 		dup2(command->in_pipe.read, STDIN_FILENO);
 		dup2(command->out_pipe.write, STDOUT_FILENO);
-		close(command->out_pipe.read);
-		close(command->in_pipe.write);
 		close(command->in_pipe.read);
 		close(command->out_pipe.write);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
