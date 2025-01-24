@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 14:53:53 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:28:49 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "libft.h"
 # include "strings.h"
 # include <stdbool.h>
+
+
 
 /******************************************************************************/
 typedef struct pipex_data_s

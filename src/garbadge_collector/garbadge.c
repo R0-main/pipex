@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 14:55:20 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 15:38:24 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 09:30:56 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include <stdlib.h>
 
-static t_list	**get_garbage(void)
+t_list	**get_garbage(void)
 {
 	static t_list	*head = NULL;
 
@@ -27,12 +27,14 @@ void	add_to_garbadge(void *pointer)
 	t_list	*lst;
 
 	garbage_head = get_garbage();
-	lst = ft_lstnew(pointer);
+	lst = (t_list *)malloc(sizeof(t_list));
 	if (!lst)
 	{
 		free(pointer);
 		safe_exit();
 	}
+	lst->content = pointer;
+	lst->next = NULL;
 	ft_lstadd_front(garbage_head, lst);
 }
 
@@ -40,19 +42,11 @@ void	*safe_malloc(size_t size)
 {
 	void	*memory;
 	t_list	*lst;
-	t_list	**garbage_head;
 
-	garbage_head = get_garbage();
 	memory = malloc(size);
 	if (!memory)
 		safe_exit();
-	lst = ft_lstnew(memory);
-	if (!lst)
-	{
-		free(memory);
-		safe_exit();
-	}
-	ft_lstadd_front(garbage_head, lst);
+	add_to_garbadge(memory);
 	return (memory);
 }
 
@@ -71,9 +65,20 @@ void	free_garbadge(void)
 		tmp = lst->next;
 		if (lst->content)
 			free(lst->content);
+		lst->content = NULL;
 		free(lst);
 		lst = tmp;
 	}
+}
+
+void	reset_garbadge(void)
+{
+	t_list	**garbage_head;
+
+	garbage_head = get_garbage();
+	if (!garbage_head || !*garbage_head)
+		return ;
+	*garbage_head = NULL;
 }
 
 void	safe_free(void *pointer)

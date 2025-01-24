@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 08:37:06 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:45:27 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ typedef struct command_s
 {
 	char	**argv;
 	char	**envp;
+	pipe_t	in_pipe;
+	pipe_t	out_pipe;
 }			command_t;
 
 /******************************************************************************/
-void		exec_command(command_t *command, pipe_t in_pipe, pipe_t out_pipe);
+void		exec_command(command_t *command);
 char		**get_parsed_command(char *argv);
 
 #endif

@@ -6,12 +6,13 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:54:01 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 13:51:02 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 08:57:21 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env.h"
 #include "libft.h"
+#include "garbadge.h"
 
 static char	*serialized_variable(const char *variable, const char *line)
 {
@@ -24,7 +25,7 @@ static char	*get_target_string(const char *variable)
 	size_t	len;
 
 	len = ft_strlen(variable);
-	target = (char *)malloc(sizeof(char) * (len + 1) + 1);
+	target = (char *)safe_malloc(sizeof(char) * (len + 1) + 1);
 	if (!target)
 		return (NULL);
 	ft_strlcpy(target, variable, len + 1);

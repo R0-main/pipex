@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 15:49:43 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:58:12 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,56 +24,89 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-// AWK ERROR ?
+static void	init_commands_pipes(pipex_data_t *data)
+{
+	t_list	*current;
+	pipe_t	in_pipe;
+	pipe_t	out_pipe;
+
+	current = data->commands_queue;
+	while (current && current->content)
+	{
+		if (pipe((int *)(&in_pipe)) == -1)
+			safe_exit();
+		if (pipe((int *)(&out_pipe)) == -1)
+			safe_exit();
+		((command_t *)current->content)->in_pipe = in_pipe;
+		((command_t *)current->content)->out_pipe = out_pipe;
+		current = current->next;
+	}
+}
+
+static void	link_commands_pipes(pipex_data_t *data)
+{
+	t_list		*current;
+	command_t	*command;
+	command_t	*prev;
+
+	current = data->commands_queue;
+	prev = NULL;
+	while (current && current->content)
+	{
+		command = (command_t *)data->commands_queue->content;
+		if (prev)
+		{
+			close(command->in_pipe.write);
+			close(command->in_pipe.read);
+			command->in_pipe = prev->out_pipe;
+		}
+		prev = command;
+		current = current->next;
+	}
+}
+
 static void	proccess_command_queue(pipex_data_t *data)
 {
-	pipe_t	parent_to_child;
-	pipe_t	child_to_parent;
-	t_list	*current;
-	t_list	*tmp;
-	bool	first;
-	int		fd;
-	int		old_read;
-	char	c;
+	t_list		*current;
+	command_t	*command;
+	t_list		*tmp;
+	bool		first;
+	int			fd;
+	int			old_read;
+	char		c;
 
 	first = true;
 	current = data->commands_queue;
-	child_to_parent = (pipe_t){0, 0};
+	command = (command_t *)data->commands_queue->content;
+	init_commands_pipes(data);
+	if (current)
+	{
+		fd = open(data->in_file, O_RDONLY);
+		while (read(fd, &c, 1))
+			write(command->in_pipe.write, &c, 1);
+		close(command->in_pipe.write);
+		close(fd);
+	}
+	link_commands_pipes(data);
 	while (current && current->content)
 	{
-		printf("fwqfqffq\n");
-		if (pipe((int *)(&parent_to_child)) == -1)
-			return ;
-		if (child_to_parent.read)
-		{
-			while (read(child_to_parent.read, &c, 1))
-				write(parent_to_child.write, &c, 1);
-			close(child_to_parent.read);
-		}
-		else
-		{
-			fd = open(data->in_file, O_RDONLY);
-			while (read(fd, &c, 1))
-				write(parent_to_child.write, &c, 1);
-			close(fd);
-		}
-		if (pipe((int *)(&child_to_parent)) == -1)
-			return ;
-		close(parent_to_child.write);
-		exec_command(current->content, parent_to_child, child_to_parent);
-		close(parent_to_child.read);
-		close(child_to_parent.write);
-		if (!current->next)
-		{
-			fd = open(data->out_file, O_WRONLY);
-			while (read(child_to_parent.read, &c, 1))
-				write(1, &c, 1);
-			close(fd);
-		}
+		command = (command_t *)data->commands_queue->content;
+		// close(command->in_pipe.write);
+		exec_command(current->content);
+		// close(command->in_pipe.read);
+		// close(command->out_pipe.write);
+		// if (!current->next)
+		// {
+		// 	fd = open(data->out_file, O_WRONLY);
+		// 	while (read(command->out_pipe.read, &c, 1))
+		// 		write(1, &c, 1);
+		// 	close(fd);
+		// }
+		// close(command->out_pipe.read);
 		tmp = current;
 		current = current->next;
 	}
-	close(child_to_parent.read);
+	printf("fwqfqftt");
 }
 
 static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
@@ -82,12 +115,7 @@ static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
 	t_list		*lst;
 
 	command = (command_t *)safe_malloc(sizeof(command_t));
-	if (!command)
-		safe_exit();
 	lst = ft_lstnew(command);
-	if (!lst)
-		safe_exit();
-	add_to_garbadge(lst);
 	command->argv = get_parsed_command(argv);
 	command->envp = envp;
 	ft_lstadd_back(&data->commands_queue, lst);
@@ -110,12 +138,12 @@ int	main(int argc, char const **argv, char const **envp)
 	i = 2;
 	if (argc < 4)
 	{
-		printf("argc error");
+		ft_printf("argc error");
 		return (EXIT_FAILURE);
 	}
 	if (!envp)
 	{
-		printf("envp_error");
+		ft_printf("envp_error");
 		return (EXIT_FAILURE);
 	}
 	data.in_file = argv[1];
@@ -130,6 +158,5 @@ int	main(int argc, char const **argv, char const **envp)
 		add_to_commands_queue(&data, (char *)argv[i++], (char **)envp);
 	proccess_command_queue(&data);
 	free_garbadge();
-	// ft_lstclear(&data.commands_queue, (void (*)(void *))free_command);
 	return (0);
 }

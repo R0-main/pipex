@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 08:26:50 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/23 15:41:40 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/24 08:57:57 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,9 @@ static void	handle_first(t_list **head, char *argv, int *i)
 	char	*str;
 
 	str = ft_substr(argv, 0, get_next_space_char_index(argv));
-	add_to_garbadge(str);
 	lst = ft_lstnew(str);
 	if (!lst)
 		safe_exit();
-	add_to_garbadge(lst);
 	ft_lstadd_back(head, lst);
 	*i += get_next_space_char_index(argv);
 }
@@ -56,10 +54,8 @@ static void	handle_quote(t_list **head, char *argv, int *i)
 		lst = ft_lstnew(str);
 		*i += next_index;
 	}
-	add_to_garbadge(str);
 	if (!lst)
 		safe_exit();
-	add_to_garbadge(lst);
 	ft_lstadd_back(head, lst);
 }
 
@@ -76,11 +72,11 @@ static void	handle_spaces(t_list **head, char *argv, int *i)
 	if (!not_only_spaces_until_end(argv + *i + 1))
 	{
 		str = ft_substr(argv, *i + 1, get_next_space_char_index(argv + *i + 1));
-		add_to_garbadge(str);
+
 		lst = ft_lstnew(str);
 		if (!lst)
 			safe_exit();
-		add_to_garbadge(lst);
+
 		ft_lstadd_back(head, lst);
 		*i += get_next_space_char_index(argv + *i + 1);
 	}
@@ -93,7 +89,7 @@ static char	**tranfrom_list_to_array(t_list *head)
 	int		args_count;
 
 	args_count = 0;
-	final = (char **)malloc(sizeof(char *) * (ft_lstsize(head) + 1));
+	final = (char **)safe_malloc(sizeof(char *) * (ft_lstsize(head) + 1));
 	while (head)
 	{
 		final[args_count++] = head->content;
@@ -101,7 +97,6 @@ static char	**tranfrom_list_to_array(t_list *head)
 		head = head->next;
 	}
 	final[args_count] = NULL;
-	add_to_garbadge(final);
 	return (final);
 }
 
