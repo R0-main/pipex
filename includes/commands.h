@@ -6,12 +6,14 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 10:51:17 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:21:44 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDS_H
 # define COMMANDS_H
+
+# include "pipex.h"
 
 typedef struct pipe_s
 {
@@ -28,7 +30,7 @@ typedef struct command_s
 }			command_t;
 
 /******************************************************************************/
-void		exec_command(command_t *command);
+void		exec_command(pipex_data_t *data, command_t *command);
 char		**get_parsed_command(char *argv);
 
 #endif

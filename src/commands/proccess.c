@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:51:37 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 10:51:47 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:21:16 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	proccess_command_queue(pipex_data_t *data)
 	while (current && current->content)
 	{
 		command = (command_t *)current->content;
-		exec_command(command);
+		exec_command(data, command);
 		current = current->next;
 		prev = command;
 	}
@@ -37,4 +37,5 @@ void	proccess_command_queue(pipex_data_t *data)
 	{
 		wpid = wait(NULL);
 	}
+	close(prev->out_pipe.write);
 }

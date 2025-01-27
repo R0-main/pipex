@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 10:55:02 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:18:59 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,12 @@ int	main(int argc, char const **argv, char const **envp)
 		ft_printf("envp_error");
 		return (EXIT_FAILURE);
 	}
-	data.in_file = argv[1];
-	data.out_file = argv[argc - 1];
+	data.in_file = open(argv[1], O_RDONLY);
+	if (data.in_file == -1)
+		ft_printf("no inFile");
+	data.out_file = open(argv[argc - 1], O_WRONLY);
+	if (data.out_file == -1)
+		ft_printf("no outFile");
 	data.argc = argc;
 	data.argv = argv;
 	data.envp = envp;

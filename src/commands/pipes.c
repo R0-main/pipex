@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 10:59:23 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:20:17 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@ static pipe_t	get_out_pipe(pipex_data_t *data, t_list *current)
 
 	if (!current->next)
 	{
-		out_pipe.read = -1;
-		out_pipe.write = open(data->out_file, O_WRONLY);
-		if (out_pipe.write == -1)
-			ft_printf("ERROR at out_pipe");
+		out_pipe.read = 0;
+		out_pipe.write = data->out_file;
 	}
 	else
 	{
@@ -39,10 +37,8 @@ static pipe_t	get_in_pipe(pipex_data_t *data, bool *first)
 	if (*first)
 	{
 		*first = false;
-		in_pipe.read = -1;
-		in_pipe.read = open(data->in_file, O_RDONLY);
-		if (in_pipe.read == -1)
-			ft_printf("ERROR at inpipe");
+		in_pipe.write = 0;
+		in_pipe.read = data->in_file;
 	}
 	else
 	{
@@ -84,11 +80,17 @@ void	link_commands_pipes(pipex_data_t *data)
 		command = (command_t *)current->content;
 		if (prev)
 		{
-			close(command->in_pipe.write);
-			close(command->in_pipe.read);
+			safe_close(command->in_pipe.write);
+			safe_close(command->in_pipe.read);
 			command->in_pipe = prev->out_pipe;
 		}
 		prev = command;
 		current = current->next;
 	}
+}
+
+void safe_close(int fd)
+{
+	if (fd && fd != -1)
+		close(fd);
 }

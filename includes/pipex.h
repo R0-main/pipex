@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 10:53:50 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:20:58 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ typedef struct pipex_data_s
 	int			argc;
 	char const	**argv;
 	char const	**envp;
-	const char	*in_file;
-	const char	*out_file;
+	int			in_file;
+	int			out_file;
 	t_list		*commands_queue;
 }				pipex_data_t;
 
@@ -47,5 +47,6 @@ void			add_to_commands_queue(pipex_data_t *data, char *argv,
 					char **envp);
 void			init_commands_pipes(pipex_data_t *data);
 void			link_commands_pipes(pipex_data_t *data);
+void			safe_close(int fd);
 
 #endif
