@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 12:38:40 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:41:21 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 
 typedef enum command_errors_e
 {
-	PERMISSION_DENIED = -1,
-	NO_SUCH_FILE_OR_DIRECTORY = -2,
+	PERMISSION_DENIED,
+	NO_SUCH_FILE_OR_DIRECTORY,
+	ERROR_OPENING_FILE,
 }						command_errors_t;
 
 typedef struct pipe_s

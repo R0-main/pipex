@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 12:42:48 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:15:56 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,21 @@ void	exec_command(pipex_data_t *data, command_t *command)
 		close(command->out_pipe.read);
 		if (command->error == PERMISSION_DENIED)
 		{
-			ft_printf("piex: %s: Permission denied\n", command->error_allias);
+			ft_printf("pipex: %s: Permission denied\n", command->error_allias);
+			close(command->in_pipe.read);
+			close(command->out_pipe.write);
+			exit(EXIT_FAILURE);
+		}
+		else if (command->error == NO_SUCH_FILE_OR_DIRECTORY)
+		{
+			ft_printf("pipex: %s: No such file or directory\n", command->error_allias);
+			close(command->in_pipe.read);
+			close(command->out_pipe.write);
+			exit(EXIT_FAILURE);
+		}
+		else if (command->error == ERROR_OPENING_FILE)
+		{
+			ft_printf("pipex: %s: Error occured at file opening !\n", command->error_allias);
 			close(command->in_pipe.read);
 			close(command->out_pipe.write);
 			exit(EXIT_FAILURE);
@@ -51,10 +65,8 @@ void	exec_command(pipex_data_t *data, command_t *command)
 		dup2(command->out_pipe.write, STDOUT_FILENO);
 		close(command->in_pipe.read);
 		close(command->out_pipe.write);
-		// if (!data->in_file_failed)
-		// 	close(data->in_file);
-		// if (!data->out_file_failed)
-		// 	close(data->out_file);
+		close(data->in_file_fd);
+		close(data->out_file_fd);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
 		while (path_env && path_env[i])
 		{

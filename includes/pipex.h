@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 12:37:55 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:04:13 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ typedef struct pipex_data_s
 	char		*in_file;
 	char		*out_file;
 	t_list		*commands_queue;
-	bool		in_file_failed;
-	bool		out_file_failed;
+	int		in_file_fd;
+	int		out_file_fd;
 }				pipex_data_t;
 
 /*******************************parsing****************************************/

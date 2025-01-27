@@ -6,12 +6,13 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 12:45:15 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:17:53 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
 #include "pipex.h"
+#include <fcntl.h>
 
 static pipe_t	get_out_pipe(pipex_data_t *data, command_t *command,
 		t_list *current)
@@ -22,18 +23,21 @@ static pipe_t	get_out_pipe(pipex_data_t *data, command_t *command,
 	{
 		out_pipe.read = 0;
 		out_pipe.write = 0;
-		command->error = 0;
-		if (access(data->out_file, W_OK) == -1)
+		if (access(data->out_file, F_OK) == 0 && access(data->out_file, W_OK) ==
+			-1)
 		{
 			command->error = PERMISSION_DENIED;
 			command->error_allias = data->out_file;
 		}
 		else
 		{
-			out_pipe.write = open(data->out_file, O_WRONLY);
-			command->error = NO_SUCH_FILE_OR_DIRECTORY;
-			if (out_pipe.write == -1)
+			data->out_file_fd = open(data->out_file, O_WRONLY | O_CREAT, 0666);
+			if (data->out_file_fd == -1)
+			{
+				command->error = ERROR_OPENING_FILE;
 				command->error_allias = data->out_file;
+			}
+			out_pipe.write = data->out_file_fd;
 		}
 	}
 	else
@@ -53,18 +57,25 @@ static pipe_t	get_in_pipe(pipex_data_t *data, command_t *command, bool *first)
 		*first = false;
 		in_pipe.write = 0;
 		in_pipe.read = 0;
-		command->error = 0;
-		if (access(data->in_file, R_OK) == -1)
+		if (access(data->in_file, F_OK) == -1)
+		{
+			command->error = NO_SUCH_FILE_OR_DIRECTORY;
+			command->error_allias = data->in_file;
+		}
+		else if (access(data->in_file, R_OK) == -1)
 		{
 			command->error = PERMISSION_DENIED;
 			command->error_allias = data->in_file;
 		}
 		else
 		{
-			in_pipe.read = open(data->in_file, O_RDONLY);
-			command->error = NO_SUCH_FILE_OR_DIRECTORY;
-			if (in_pipe.read == -1)
-				command->error_allias = data->in_file;
+			data->in_file_fd = open(data->in_file, O_RDONLY);
+			if (data->in_file_fd == -1)
+			{
+				command->error = ERROR_OPENING_FILE;
+				command->error_allias = data->out_file;
+			}
+			in_pipe.read = data->in_file_fd;
 		}
 	}
 	else
