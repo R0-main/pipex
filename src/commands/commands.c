@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 16:10:05 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:21:57 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ static void	close_until_end(pipex_data_t *data, command_t *target)
 	while (current && current->content)
 	{
 		command = (command_t *)current->content;
-		close(command->out_pipe.read);
-		close(command->out_pipe.write);
 		close(command->in_pipe.read);
 		close(command->in_pipe.write);
 		current = current->next;
 	}
+	close(data->in_file_fd);
+	close(data->out_file_fd);
 }
 
 void	exec_command(pipex_data_t *data, command_t *command)
@@ -60,35 +60,35 @@ void	exec_command(pipex_data_t *data, command_t *command)
 	fork_id = fork();
 	if (fork_id == 0)
 	{
-		reset_garbadge();
 		close(command->in_pipe.write);
 		close(command->out_pipe.read);
 		if (command->error == PERMISSION_DENIED)
 		{
 			ft_printf("pipex: %s: Permission denied\n", command->error_allias);
-			close(command->in_pipe.read);
-			close(command->out_pipe.write);
+			close_until_end(data, command);
+			free_garbadge();
 			exit(EXIT_FAILURE);
 		}
 		else if (command->error == NO_SUCH_FILE_OR_DIRECTORY)
 		{
 			ft_printf("pipex: %s: No such file or directory\n",
 				command->error_allias);
-			close(command->in_pipe.read);
-			close(command->out_pipe.write);
+			close_until_end(data, command);
+			free_garbadge();
 			exit(EXIT_FAILURE);
 		}
 		else if (command->error == ERROR_OPENING_FILE)
 		{
 			ft_printf("pipex: %s: Error occured at file opening !\n",
 				command->error_allias);
-			close(command->in_pipe.read);
-			close(command->out_pipe.write);
+			close_until_end(data, command);
+			free_garbadge();
 			exit(EXIT_FAILURE);
 		}
+		reset_garbadge();
 		dup2(command->in_pipe.read, STDIN_FILENO);
-		close(command->in_pipe.read);
 		dup2(command->out_pipe.write, STDOUT_FILENO);
+		close(command->in_pipe.read);
 		close(command->out_pipe.write);
 		close_until_end(data, command);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
@@ -99,7 +99,7 @@ void	exec_command(pipex_data_t *data, command_t *command)
 			execve(command_name, (char *const *)command->argv,
 				(char *const *)command->envp);
 		}
-		// free_garbadge();
+		free_garbadge();
 		exit(EXIT_FAILURE);
 	}
 	else
