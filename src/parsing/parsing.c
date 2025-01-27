@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 08:26:50 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/24 08:57:57 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 09:59:15 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "garbadge.h"
 #include "libft.h"
 #include "pipex.h"
-#include "strings.h"
+#include "ft_strings.h"
 #include <stdio.h>
 
 static void	handle_first(t_list **head, char *argv, int *i)
@@ -107,7 +107,7 @@ char	**get_parsed_command(char *argv)
 
 	i = -1;
 	head = NULL;
-	while (argv[++i])
+	while (argv[++i] && !not_only_spaces_until_end(argv + i))
 	{
 		if (!head)
 			handle_first(&head, argv, &i);

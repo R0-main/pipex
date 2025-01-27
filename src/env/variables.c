@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:54:01 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/24 08:57:21 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 09:06:33 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,6 @@ const char	*get_env(const char *variable, const char **envp)
 	target = get_target_string(variable);
 	while (envp[++i])
 		if (ft_strncmp(envp[i], target, ft_strlen(target)) == 0)
-			return (free(target), serialized_variable(variable, envp[i]));
-	return (free(target), NULL);
+			return (safe_free(target), serialized_variable(variable, envp[i]));
+	return (safe_free(target), NULL);
 }

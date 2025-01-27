@@ -58,7 +58,7 @@ $(FT_LIBC) :
 	@if [ ! -e "$(shell dirname $@)" ]; then \
 		git clone git@github.com:R0-main/ft_libc.git $(shell dirname $@); \
 	fi;
-	$(MAKE) $(shell dirname $@)
+	$(MAKE) $(shell dirname $@) SAFE=1
 
 header :
 		@printf  "_______ _________ _______  _______				\n"; \

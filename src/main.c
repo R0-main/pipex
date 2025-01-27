@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/24 15:43:24 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:44:11 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,37 @@ static void	init_commands_pipes(pipex_data_t *data)
 	t_list	*current;
 	pipe_t	in_pipe;
 	pipe_t	out_pipe;
+	bool	first;
 
+	first = true;
 	current = data->commands_queue;
 	while (current && current->content)
 	{
-		if (pipe((int *)(&in_pipe)) == -1)
+		if (first)
+		{
+			first = false;
+			in_pipe.read = -1;
+			in_pipe.read = open(data->in_file, O_RDONLY);
+			if (in_pipe.read == -1)
+				ft_printf("ERROR at inpipe");
+		}
+		else
+		{
+			if (pipe((int *)(&in_pipe)) == -1)
 			safe_exit();
-		if (pipe((int *)(&out_pipe)) == -1)
+		}
+		if (!current->next)
+		{
+			out_pipe.read = -1;
+			out_pipe.write = open(data->out_file, O_WRONLY);
+			if (out_pipe.write == -1)
+				ft_printf("ERROR at out_pipe");
+		}
+		else
+		{
+			if (pipe((int *)(&out_pipe)) == -1)
 			safe_exit();
+		}
 		((command_t *)current->content)->in_pipe = in_pipe;
 		((command_t *)current->content)->out_pipe = out_pipe;
 		current = current->next;
@@ -63,7 +86,6 @@ static void	link_commands_pipes(pipex_data_t *data)
 		prev = command;
 		current = current->next;
 	}
-	prev->out_pipe.write = 1;
 }
 
 static void	close_all_pipes(pipex_data_t *data)
@@ -72,14 +94,12 @@ static void	close_all_pipes(pipex_data_t *data)
 	command_t	*command;
 
 	current = data->commands_queue;
-	while (current && current->content)
+	while (current && current->content && current->next)
 	{
 		command = (command_t *)current->content;
-		if (current->next)
-		{
-			close(command->in_pipe.read);
-		}
-		close(command->in_pipe.write);
+		close(command->in_pipe.read);
+		if (command->in_pipe.write != 1)
+			close(command->in_pipe.write);
 		current = current->next;
 	}
 }
@@ -89,50 +109,25 @@ static void	proccess_command_queue(pipex_data_t *data)
 	t_list		*current;
 	command_t	*command;
 	command_t	*prev;
-	int			fd;
-	int			old_read;
-	char		c;
-	int			d;
+	pid_t		wpid;
 
 	current = data->commands_queue;
 	prev = NULL;
 	command = (command_t *)data->commands_queue->content;
 	init_commands_pipes(data);
-	if (current)
-	{
-		fd = open(data->in_file, O_RDONLY);
-		while (read(fd, &c, 1))
-			write(command->in_pipe.write, &c, 1);
-		close(command->in_pipe.write);
-		close(fd);
-	}
 	link_commands_pipes(data);
 	while (current && current->content)
 	{
 		command = (command_t *)current->content;
-		
 		exec_command(command);
 		current = current->next;
 		prev = command;
 	}
-	// pid_t child_pid, wpid;
-	// int status = 0;
-	// while ((wpid = wait(&status)) > 0);
-	close_all_pipes(data);
-	// if (prev)
-	// {
-	// 	close(command->out_pipe.write);
-	// 	close(command->in_pipe.write);
-	// 	close(command->in_pipe.read);
-	// 	fd = open(data->out_file, O_WRONLY);
-	// 	d = 1;
-	// 	while (d > 0)
-	// 	{
-	// 		d = read(prev->out_pipe.read, &c, 1);
-	// 		write(1, &c, 1);
-	// 	}
-	// 	close(fd);
-	// }
+	wpid = 1;
+	while (wpid > 0)
+	{
+		wpid = wait(NULL);
+	}
 }
 
 static void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)

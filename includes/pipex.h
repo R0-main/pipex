@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/24 11:28:49 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 09:02:44 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define PIPEX_H
 
 # include "libft.h"
-# include "strings.h"
+# include "ft_strings.h"
 # include <stdbool.h>
 
 
