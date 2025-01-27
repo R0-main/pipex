@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 16:21:57 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:25:04 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ static void	close_until_end(pipex_data_t *data, command_t *target)
 		close(command->in_pipe.write);
 		current = current->next;
 	}
-	close(data->in_file_fd);
-	close(data->out_file_fd);
+	if (data->in_file_fd != -1)
+		close(data->in_file_fd);
+	if (data->out_file_fd != -1)
+		close(data->out_file_fd);
 }
 
 void	exec_command(pipex_data_t *data, command_t *command)

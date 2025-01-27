@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 13:43:43 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:25:17 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@ int	main(int argc, char const **argv, char const **envp)
 	data.argc = argc;
 	data.argv = argv;
 	data.envp = envp;
+
+	data.out_file_fd = -1;
+	data.in_file_fd = -1;
+
 	data.commands_queue = NULL;
 
 	while (i < argc - 1)
