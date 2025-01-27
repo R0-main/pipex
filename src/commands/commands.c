@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 11:21:33 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 12:42:48 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,21 @@ void	exec_command(pipex_data_t *data, command_t *command)
 		reset_garbadge();
 		close(command->in_pipe.write);
 		close(command->out_pipe.read);
+		if (command->error == PERMISSION_DENIED)
+		{
+			ft_printf("piex: %s: Permission denied\n", command->error_allias);
+			close(command->in_pipe.read);
+			close(command->out_pipe.write);
+			exit(EXIT_FAILURE);
+		}
 		dup2(command->in_pipe.read, STDIN_FILENO);
 		dup2(command->out_pipe.write, STDOUT_FILENO);
 		close(command->in_pipe.read);
 		close(command->out_pipe.write);
-		close(data->in_file);
-		close(data->out_file);
+		// if (!data->in_file_failed)
+		// 	close(data->in_file);
+		// if (!data->out_file_failed)
+		// 	close(data->out_file);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
 		while (path_env && path_env[i])
 		{
