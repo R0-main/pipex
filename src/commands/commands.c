@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 14:15:56 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:10:05 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,29 @@
 static char	*get_full_path(const char *path)
 {
 	return (ft_strjoin(path, "/"));
+}
+
+static void	close_until_end(pipex_data_t *data, command_t *target)
+{
+	t_list		*current;
+	command_t	*command;
+
+	current = data->commands_queue;
+	while (current && current->content != target)
+	{
+		current = current->next;
+	}
+	if (current)
+		current = current->next;
+	while (current && current->content)
+	{
+		command = (command_t *)current->content;
+		close(command->out_pipe.read);
+		close(command->out_pipe.write);
+		close(command->in_pipe.read);
+		close(command->in_pipe.write);
+		current = current->next;
+	}
 }
 
 void	exec_command(pipex_data_t *data, command_t *command)
@@ -49,24 +72,25 @@ void	exec_command(pipex_data_t *data, command_t *command)
 		}
 		else if (command->error == NO_SUCH_FILE_OR_DIRECTORY)
 		{
-			ft_printf("pipex: %s: No such file or directory\n", command->error_allias);
+			ft_printf("pipex: %s: No such file or directory\n",
+				command->error_allias);
 			close(command->in_pipe.read);
 			close(command->out_pipe.write);
 			exit(EXIT_FAILURE);
 		}
 		else if (command->error == ERROR_OPENING_FILE)
 		{
-			ft_printf("pipex: %s: Error occured at file opening !\n", command->error_allias);
+			ft_printf("pipex: %s: Error occured at file opening !\n",
+				command->error_allias);
 			close(command->in_pipe.read);
 			close(command->out_pipe.write);
 			exit(EXIT_FAILURE);
 		}
 		dup2(command->in_pipe.read, STDIN_FILENO);
-		dup2(command->out_pipe.write, STDOUT_FILENO);
 		close(command->in_pipe.read);
+		dup2(command->out_pipe.write, STDOUT_FILENO);
 		close(command->out_pipe.write);
-		close(data->in_file_fd);
-		close(data->out_file_fd);
+		close_until_end(data, command);
 		path_env = ft_split(get_env("PATH", (const char **)command->envp), ':');
 		while (path_env && path_env[i])
 		{
@@ -83,6 +107,7 @@ void	exec_command(pipex_data_t *data, command_t *command)
 		close(command->in_pipe.write);
 		close(command->in_pipe.read);
 		close(command->out_pipe.write);
+		// close(command->out_pipe);
 	}
 }
 // printf("cmd : %s %s | ir : %d , iw : %d | or : %d , ow : %d\n",

@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 14:17:53 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:04:48 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ static pipe_t	get_out_pipe(pipex_data_t *data, command_t *command,
 				command->error = ERROR_OPENING_FILE;
 				command->error_allias = data->out_file;
 			}
-			out_pipe.write = data->out_file_fd;
+			out_pipe.write = dup(data->out_file_fd);
+			close(data->out_file_fd);
 		}
 	}
 	else
@@ -75,7 +76,8 @@ static pipe_t	get_in_pipe(pipex_data_t *data, command_t *command, bool *first)
 				command->error = ERROR_OPENING_FILE;
 				command->error_allias = data->out_file;
 			}
-			in_pipe.read = data->in_file_fd;
+			in_pipe.read = dup(data->in_file_fd);
+			close(data->in_file_fd);
 		}
 	}
 	else
