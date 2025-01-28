@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 09:48:21 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:51:54 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,17 +107,11 @@ void	link_commands_pipes(t_pipex_data *data)
 		command = (t_command *)current->content;
 		if (prev)
 		{
-			safe_close(command->in_pipe.write);
-			safe_close(command->in_pipe.read);
+			close(command->in_pipe.write);
+			close(command->in_pipe.read);
 			command->in_pipe = prev->out_pipe;
 		}
 		prev = command;
 		current = current->next;
 	}
-}
-
-void	safe_close(int fd)
-{
-	if (fd && fd != -1)
-		close(fd);
 }
