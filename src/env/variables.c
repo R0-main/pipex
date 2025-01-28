@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:54:01 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 09:06:33 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 12:35:42 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static char	*get_target_string(const char *variable)
 	size_t	len;
 
 	len = ft_strlen(variable);
-	target = (char *)safe_malloc(sizeof(char) * (len + 1) + 1);
+	target = (char *)malloc(sizeof(char) * (len + 1) + 1);
 	if (!target)
 		return (NULL);
 	ft_strlcpy(target, variable, len + 1);
@@ -45,6 +45,6 @@ const char	*get_env(const char *variable, const char **envp)
 	target = get_target_string(variable);
 	while (envp[++i])
 		if (ft_strncmp(envp[i], target, ft_strlen(target)) == 0)
-			return (safe_free(target), serialized_variable(variable, envp[i]));
-	return (safe_free(target), NULL);
+			return (free(target), serialized_variable(variable, envp[i]));
+	return (free(target), NULL);
 }

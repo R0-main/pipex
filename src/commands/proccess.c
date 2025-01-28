@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:51:37 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 10:51:18 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:09:54 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	proccess_command_queue(t_pipex_data *data)
 	command = (t_command *)data->commands_queue->content;
 	init_commands_pipes(data);
 	link_commands_pipes(data);
+	check_if_commands_exist(data);
+	print_commands_errors(data);
 	while (current && current->content)
 	{
 		command = (t_command *)current->content;

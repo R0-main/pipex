@@ -30,6 +30,7 @@ SRCS				=	src/main.c\
 						src/commands/pipes.c\
 						src/commands/proccess.c\
 						src/commands/queue.c\
+						src/commands/checks.c\
 						src/errors/errors.c\
 						src/parsing/parsing.c\
 						src/parsing/utils.c\

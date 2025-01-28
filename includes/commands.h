@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 11:19:39 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:11:24 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ typedef struct s_command
 
 /******************************************************************************/
 void					exec_command(t_pipex_data *data, t_command *command);
+void					check_if_commands_exist(t_pipex_data *data);
 char					**get_parsed_command(char *argv);
 
+void					close_pipes_until_end(t_pipex_data *data,
+							t_command *target);
 #endif

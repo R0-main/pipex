@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 11:36:44 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:39:52 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static void	handle_here_doc(int argc, char const **argv, char const **envp,
 
 	if (pipe((int *)(&in_pipe)) == -1)
 		safe_exit();
+	printf("heredoc PIPE : %d %d\n", in_pipe.read, in_pipe.write);
 	data->here_doc = true;
 	while (true)
 	{
@@ -60,12 +61,12 @@ int	main(int argc, char const **argv, char const **envp)
 	i = 2;
 	if (argc < 5)
 	{
-		ft_printf("argc error");
+		ft_printf("argc error\n");
 		return (EXIT_FAILURE);
 	}
 	if (!envp)
 	{
-		ft_printf("envp_error");
+		ft_printf("envp_error\n");
 		return (EXIT_FAILURE);
 	}
 	init_pipex_data(argc, argv, envp, &data);
