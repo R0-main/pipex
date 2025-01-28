@@ -6,19 +6,19 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:47:58 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 16:23:03 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:48:21 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
 #include "pipex.h"
 
-void	add_to_commands_queue(pipex_data_t *data, char *argv, char **envp)
+void	add_to_commands_queue(t_pipex_data *data, char *argv, char **envp)
 {
-	command_t	*command;
+	t_command	*command;
 	t_list		*lst;
 
-	command = (command_t *)safe_malloc(sizeof(command_t));
+	command = (t_command *)safe_malloc(sizeof(t_command));
 	command->error = -1;
 	command->error_allias = NULL;
 	lst = ft_lstnew(command);

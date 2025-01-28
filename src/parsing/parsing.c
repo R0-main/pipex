@@ -6,16 +6,16 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 08:26:50 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 09:59:15 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:44:57 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
 #include "env.h"
+#include "ft_strings.h"
 #include "garbadge.h"
 #include "libft.h"
 #include "pipex.h"
-#include "ft_strings.h"
 #include <stdio.h>
 
 static void	handle_first(t_list **head, char *argv, int *i)
@@ -39,8 +39,10 @@ static void	handle_quote(t_list **head, char *argv, int *i)
 	t_list	*lst;
 
 	next_index = get_next_char_index(argv + *i + 1, '\'') + 1;
-	if (!ft_isspace(argv[*i + next_index + 1]) && argv[*i + next_index
-		+ 1] != 0)
+	if (
+		!ft_isspace(argv[*i + next_index + 1])
+		&& argv[*i + next_index + 1] != 0
+	)
 	{
 		next_space_after_last_quote = get_next_space_char_index(argv + *i
 				+ next_index);
@@ -50,8 +52,7 @@ static void	handle_quote(t_list **head, char *argv, int *i)
 	}
 	else
 	{
-		str = ft_substr(argv, *i + 1, next_index - 1);
-		lst = ft_lstnew(str);
+		lst = ft_lstnew(ft_substr(argv, *i + 1, next_index - 1));
 		*i += next_index;
 	}
 	if (!lst)
@@ -72,11 +73,9 @@ static void	handle_spaces(t_list **head, char *argv, int *i)
 	if (!not_only_spaces_until_end(argv + *i + 1))
 	{
 		str = ft_substr(argv, *i + 1, get_next_space_char_index(argv + *i + 1));
-
 		lst = ft_lstnew(str);
 		if (!lst)
 			safe_exit();
-
 		ft_lstadd_back(head, lst);
 		*i += get_next_space_char_index(argv + *i + 1);
 	}

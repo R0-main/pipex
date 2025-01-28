@@ -6,40 +6,34 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 13:41:21 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:50:48 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDS_H
 # define COMMANDS_H
 
+# include "errors.h"
 # include "pipex.h"
 
-typedef enum command_errors_e
-{
-	PERMISSION_DENIED,
-	NO_SUCH_FILE_OR_DIRECTORY,
-	ERROR_OPENING_FILE,
-}						command_errors_t;
-
-typedef struct pipe_s
+typedef struct s_pipe
 {
 	int					read;
 	int					write;
-}						pipe_t;
+}						t_pipe;
 
-typedef struct command_s
+typedef struct s_command
 {
 	char				**argv;
 	char				**envp;
-	pipe_t				in_pipe;
-	pipe_t				out_pipe;
-	command_errors_t	error;
+	t_pipe				in_pipe;
+	t_pipe				out_pipe;
+	t_command_errors	error;
 	char				*error_allias;
-}						command_t;
+}						t_command;
 
 /******************************************************************************/
-void					exec_command(pipex_data_t *data, command_t *command);
+void					exec_command(t_pipex_data *data, t_command *command);
 char					**get_parsed_command(char *argv);
 
 #endif

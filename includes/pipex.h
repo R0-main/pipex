@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 14:04:13 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:46:09 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <unistd.h>
 
 /******************************************************************************/
-typedef struct pipex_data_s
+typedef struct s_pipex_data
 {
 	int			argc;
 	char const	**argv;
@@ -31,9 +31,9 @@ typedef struct pipex_data_s
 	char		*in_file;
 	char		*out_file;
 	t_list		*commands_queue;
-	int		in_file_fd;
-	int		out_file_fd;
-}				pipex_data_t;
+	int			in_file_fd;
+	int			out_file_fd;
+}				t_pipex_data;
 
 /*******************************parsing****************************************/
 int				get_next_space_char_index(char *str);
@@ -44,11 +44,11 @@ bool			not_only_spaces_until_end(char *str);
 char			**get_parsed_command(char *argv);
 
 /*******************************commands***************************************/
-void			proccess_command_queue(pipex_data_t *data);
-void			add_to_commands_queue(pipex_data_t *data, char *argv,
+void			proccess_command_queue(t_pipex_data *data);
+void			add_to_commands_queue(t_pipex_data *data, char *argv,
 					char **envp);
-void			init_commands_pipes(pipex_data_t *data);
-void			link_commands_pipes(pipex_data_t *data);
+void			init_commands_pipes(t_pipex_data *data);
+void			link_commands_pipes(t_pipex_data *data);
 void			safe_close(int fd);
 
 #endif

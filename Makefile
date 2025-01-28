@@ -26,14 +26,13 @@ INFO				=	ⓘ
 FT_LIBC 			= ./dependencies/ft_libc/ft_libc.a
 
 SRCS				=	src/main.c\
-						src/test.c\
 						src/commands/commands.c\
 						src/commands/pipes.c\
 						src/commands/proccess.c\
 						src/commands/queue.c\
+						src/errors/errors.c\
 						src/parsing/parsing.c\
 						src/parsing/utils.c\
-						src/garbadge_collector/garbadge.c\
 						src/env/variables.c
 
 SRC_COUNT			=	$(words $(SRCS))

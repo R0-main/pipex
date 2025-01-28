@@ -12,6 +12,7 @@
 		"wait.h": "c",
 		"garbadge.h": "c",
 		"strings.h": "c",
-		"ft_strings.h": "c"
+		"ft_strings.h": "c",
+		"errors.h": "c"
 	}
 }

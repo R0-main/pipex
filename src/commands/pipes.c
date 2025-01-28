@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/27 16:21:52 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:48:21 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,25 @@
 #include "pipex.h"
 #include <fcntl.h>
 
-static pipe_t	get_out_pipe(pipex_data_t *data, command_t *command,
+static t_pipe	get_out_pipe(t_pipex_data *data, t_command *command,
 		t_list *current)
 {
-	pipe_t	out_pipe;
+	t_pipe	out_pipe;
 
 	if (!current->next)
 	{
 		out_pipe.read = 0;
 		out_pipe.write = 0;
-		if (access(data->out_file, F_OK) == 0 && access(data->out_file, W_OK) ==
-			-1)
-		{
-			command->error = PERMISSION_DENIED;
-			command->error_allias = data->out_file;
-		}
+		if (
+			access(data->out_file, F_OK) == 0
+			&& access(data->out_file, W_OK) == -1
+		)
+			add_error(command, PERMISSION_DENIED, data->out_file);
 		else
 		{
 			data->out_file_fd = open(data->out_file, O_WRONLY | O_CREAT, 0666);
 			if (data->out_file_fd == -1)
-			{
-				command->error = ERROR_OPENING_FILE;
-				command->error_allias = data->out_file;
-			}
+				add_error(command, ERROR_OPENING_FILE, data->out_file);
 			out_pipe.write = data->out_file_fd;
 		}
 	}
@@ -48,9 +44,9 @@ static pipe_t	get_out_pipe(pipex_data_t *data, command_t *command,
 	return (out_pipe);
 }
 
-static pipe_t	get_in_pipe(pipex_data_t *data, command_t *command, bool *first)
+static t_pipe	get_in_pipe(t_pipex_data *data, t_command *command, bool *first)
 {
-	pipe_t	in_pipe;
+	t_pipe	in_pipe;
 
 	if (*first)
 	{
@@ -58,23 +54,14 @@ static pipe_t	get_in_pipe(pipex_data_t *data, command_t *command, bool *first)
 		in_pipe.write = 0;
 		in_pipe.read = 0;
 		if (access(data->in_file, F_OK) == -1)
-		{
-			command->error = NO_SUCH_FILE_OR_DIRECTORY;
-			command->error_allias = data->in_file;
-		}
+			add_error(command, NO_SUCH_FILE_OR_DIRECTORY, data->in_file);
 		else if (access(data->in_file, R_OK) == -1)
-		{
-			command->error = PERMISSION_DENIED;
-			command->error_allias = data->in_file;
-		}
+			add_error(command, PERMISSION_DENIED, data->in_file);
 		else
 		{
 			data->in_file_fd = open(data->in_file, O_RDONLY);
 			if (data->in_file_fd == -1)
-			{
-				command->error = ERROR_OPENING_FILE;
-				command->error_allias = data->out_file;
-			}
+				add_error(command, ERROR_OPENING_FILE, data->out_file);
 			in_pipe.read = data->in_file_fd;
 		}
 	}
@@ -86,19 +73,19 @@ static pipe_t	get_in_pipe(pipex_data_t *data, command_t *command, bool *first)
 	return (in_pipe);
 }
 
-void	init_commands_pipes(pipex_data_t *data)
+void	init_commands_pipes(t_pipex_data *data)
 {
 	t_list		*current;
-	command_t	*command;
-	pipe_t		in_pipe;
-	pipe_t		out_pipe;
+	t_command	*command;
+	t_pipe		in_pipe;
+	t_pipe		out_pipe;
 	bool		first;
 
 	first = true;
 	current = data->commands_queue;
 	while (current && current->content)
 	{
-		command = (command_t *)current->content;
+		command = (t_command *)current->content;
 		in_pipe = get_in_pipe(data, command, &first);
 		out_pipe = get_out_pipe(data, command, current);
 		command->in_pipe = in_pipe;
@@ -107,17 +94,17 @@ void	init_commands_pipes(pipex_data_t *data)
 	}
 }
 
-void	link_commands_pipes(pipex_data_t *data)
+void	link_commands_pipes(t_pipex_data *data)
 {
 	t_list		*current;
-	command_t	*command;
-	command_t	*prev;
+	t_command	*command;
+	t_command	*prev;
 
 	current = data->commands_queue;
 	prev = NULL;
 	while (current && current->content)
 	{
-		command = (command_t *)current->content;
+		command = (t_command *)current->content;
 		if (prev)
 		{
 			safe_close(command->in_pipe.write);

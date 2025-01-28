@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 08:54:42 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 09:37:24 by rguigneb         ###   ########.fr       */
+/*   Created: 2025/01/28 09:39:23 by rguigneb          #+#    #+#             */
+/*   Updated: 2025/01/28 09:59:09 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#include "errors.h"
+#include "commands.h"
 
-# include <stdlib.h>
-
-/******************************************************************************/
-const char	*get_env(const char *variable, const char **envp);
-
-#endif
+void	add_error(t_command *command, t_command_errors error, char *allias)
+{
+	command->error = error;
+	command->error_allias = allias;
+}
