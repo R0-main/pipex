@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:18 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 09:50:48 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:19:39 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 
 # include "errors.h"
 # include "pipex.h"
-
-typedef struct s_pipe
-{
-	int					read;
-	int					write;
-}						t_pipe;
 
 typedef struct s_command
 {

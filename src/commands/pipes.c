@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 10:51:54 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:17:47 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,8 @@ static t_pipe	get_out_pipe(t_pipex_data *data, t_command *command,
 	{
 		out_pipe.read = 0;
 		out_pipe.write = 0;
-		if (
-			access(data->out_file, F_OK) == 0
-			&& access(data->out_file, W_OK) == -1
-		)
+		if (access(data->out_file, F_OK) == 0 && access(data->out_file, W_OK) ==
+			-1)
 			add_error(command, PERMISSION_DENIED, data->out_file);
 		else
 		{
@@ -86,9 +84,14 @@ void	init_commands_pipes(t_pipex_data *data)
 	while (current && current->content)
 	{
 		command = (t_command *)current->content;
-		in_pipe = get_in_pipe(data, command, &first);
+		if (!data->here_doc)
+		{
+			in_pipe = get_in_pipe(data, command, &first);
+			command->in_pipe = in_pipe;
+		}
+		else
+			command->in_pipe = data->here_doc_pipe;
 		out_pipe = get_out_pipe(data, command, current);
-		command->in_pipe = in_pipe;
 		command->out_pipe = out_pipe;
 		current = current->next;
 	}
