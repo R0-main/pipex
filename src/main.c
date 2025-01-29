@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 11:09:32 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 12:59:43 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	init_pipex_data(int argc, char const **argv, char const **envp,
 	data->out_file_fd = -1;
 	data->in_file_fd = -1;
 	data->commands_queue = NULL;
+	data->error_code = 0;
 	data->here_doc = false;
 }
 
@@ -79,5 +80,5 @@ int	main(int argc, char const **argv, char const **envp)
 		add_to_commands_queue(&data, (char *)argv[i++], (char **)envp);
 	proccess_command_queue(&data);
 	free_garbadge();
-	return (EXIT_SUCCESS);
+	return (data.error_code);
 }

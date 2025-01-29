@@ -45,7 +45,7 @@ OBJ_DIR				=	objects
 all : header $(NAME)
 
 $(NAME) : $(FT_LIBC) $(OBJ_DIR)
-	$(CC) $(CFLAGS) $(OBJS) $(FT_LIBC) -o $(NAME)
+		@$(CC) $(CFLAGS) $(OBJS) $(FT_LIBC) -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.c
 		@mkdir -p $(dir $@)
@@ -63,7 +63,7 @@ $(FT_LIBC) :
 	@if [ ! -e "$(shell dirname $@)" ]; then \
 		git clone git@github.com:R0-main/ft_libc.git $(shell dirname $@); \
 	fi;
-	$(MAKE) $(shell dirname $@) SAFE=1
+	@$(MAKE) $(shell dirname $@) SAFE=1
 
 header :
 		@printf  "_______ _________ _______  _______				\n"; \

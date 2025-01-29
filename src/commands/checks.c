@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:47:13 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:44:01 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:11:48 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,14 @@ void	check_if_commands_exist(t_pipex_data *data)
 	while (current && current->content)
 	{
 		command = (t_command *)current->content;
-		if (command && command->argv && !can_execute_command(command))
+		if (command && command->argv && !can_execute_command(command)
+			&& command->error == NO_ERROR)
+		{
 			ft_fprintf(STDERR_FILENO, "%s: command not found\n",
 				command->argv[0]);
+			if (!current->next)
+				data->error_code = 127;
+		}
 		current = current->next;
 	}
 }

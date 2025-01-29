@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:27:07 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 12:34:40 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static t_pipe	get_out_pipe(t_pipex_data *data, t_command *command,
 	t_pipe	out_pipe;
 	int		options;
 
-	options = O_WRONLY | O_CREAT;
+	options = O_WRONLY | O_CREAT | O_TRUNC;
 	if (data->here_doc)
 		options = options | O_APPEND;
 	if (!current->next)
@@ -32,7 +32,7 @@ static t_pipe	get_out_pipe(t_pipex_data *data, t_command *command,
 			add_error(command, PERMISSION_DENIED, data->out_file);
 		else
 		{
-			data->out_file_fd = open(data->out_file, options, 0666);
+			data->out_file_fd = open(data->out_file, options, 0644);
 			if (data->out_file_fd == -1)
 				add_error(command, ERROR_OPENING_FILE, data->out_file);
 			out_pipe.write = data->out_file_fd;

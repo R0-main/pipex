@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:39:23 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 11:11:35 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:14:38 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	print_commands_errors(t_pipex_data *data)
 	t_command	*command;
 
 	current = data->commands_queue;
+	command = NULL;
 	while (current && current->content)
 	{
 		command = (t_command *)current->content;

@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:18:18 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:31:19 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_pipex_data
 	int			out_file_fd;
 	bool		here_doc;
 	t_pipe		here_doc_pipe;
+	int			error_code;
 }				t_pipex_data;
 
 /*******************************parsing****************************************/
