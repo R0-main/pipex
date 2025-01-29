@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:51:37 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 13:12:30 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:21:38 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void	proccess_command_queue(t_pipex_data *data)
 	{
 		wpid = wait(&status);
 		if (wpid > 0 && WIFEXITED(status) && data->error_code != 127)
-		{
 			data->error_code = WEXITSTATUS(status);
-		}
 	}
 }
