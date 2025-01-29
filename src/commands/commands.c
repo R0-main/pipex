@@ -6,13 +6,13 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 08:49:44 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 10:28:34 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
 #include "env.h"
-#include "ft_printf.h"
+#include "ft_fprintf.h"
 #include "garbadge.h"
 #include "libft.h"
 #include "pipex.h"
@@ -35,8 +35,10 @@ void	close_pipes_until_end(t_pipex_data *data, t_command *target)
 	while (current && current->content)
 	{
 		command = (t_command *)current->content;
-		close(command->in_pipe.read);
-		close(command->in_pipe.write);
+		if (command->in_pipe.read)
+			close(command->in_pipe.read);
+		if (command->in_pipe.write)
+			close(command->in_pipe.write);
 		current = current->next;
 	}
 	if (data->in_file_fd != -1)
@@ -71,8 +73,10 @@ static void	execute_for_every_paths(t_pipex_data *data, t_command *command)
 
 void	close_and_dup(t_command *command)
 {
-	close(command->in_pipe.write);
-	close(command->out_pipe.read);
+	if (command->in_pipe.write)
+		close(command->in_pipe.write);
+	if (command->in_pipe.read)
+		close(command->out_pipe.read);
 	dup2(command->in_pipe.read, STDIN_FILENO);
 	dup2(command->out_pipe.write, STDOUT_FILENO);
 	close(command->in_pipe.read);
@@ -98,9 +102,12 @@ void	exec_command(t_pipex_data *data, t_command *command)
 	}
 	else
 	{
-		close(command->in_pipe.write);
-		close(command->in_pipe.read);
-		close(command->out_pipe.write);
+		if (command->in_pipe.write)
+			close(command->in_pipe.write);
+		if (command->in_pipe.read)
+			close(command->in_pipe.read);
+		if (command->out_pipe.write)
+			close(command->out_pipe.write);
 	}
 }
 // printf("cmd : %s %s | ir : %d , iw : %d | or : %d , ow : %d\n",

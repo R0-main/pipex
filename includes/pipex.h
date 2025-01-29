@@ -6,14 +6,14 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 13:11:18 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 10:18:18 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "ft_printf.h"
+# include "ft_fprintf.h"
 # include "ft_strings.h"
 # include "garbadge.h"
 # include "libft.h"

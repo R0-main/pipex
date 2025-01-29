@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:47:13 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 08:46:51 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 10:35:31 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	check_if_commands_exist(t_pipex_data *data)
 	{
 		command = (t_command *)current->content;
 		if (command && command->argv && !can_execute_command(command))
-			add_error(command, COMMAND_NOT_FOUND, command->argv[0]);
+			ft_fprintf(STDERR_FILENO, "%s: command not found\n", command->argv[0]);
 		current = current->next;
 	}
 }

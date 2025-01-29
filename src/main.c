@@ -6,15 +6,17 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 08:42:19 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 10:18:21 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
-#include "ft_printf.h"
+#include "ft_fprintf.h"
 #include "get_next_line.h"
 #include "libft.h"
 #include "pipex.h"
+#include <string.h>
+#include <errno.h>
 
 void	init_pipex_data(int argc, char const **argv, char const **envp,
 		t_pipex_data *data)
@@ -61,12 +63,12 @@ int	main(int argc, char const **argv, char const **envp)
 	i = 2;
 	if (argc < 5)
 	{
-		ft_printf("argc error\n");
+		print_error("pipex: arguments: invalid number of arguments\n");
 		return (EXIT_FAILURE);
 	}
 	if (!envp)
 	{
-		ft_printf("envp_error\n");
+		print_error("pipex: environement: invalid environement\n");
 		return (EXIT_FAILURE);
 	}
 	init_pipex_data(argc, argv, envp, &data);
