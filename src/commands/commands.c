@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 08:39:55 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 08:49:44 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,27 @@ static void	execute_for_every_paths(t_pipex_data *data, t_command *command)
 		(char *const *)command->envp);
 }
 
+void	close_and_dup(t_command *command)
+{
+	close(command->in_pipe.write);
+	close(command->out_pipe.read);
+	dup2(command->in_pipe.read, STDIN_FILENO);
+	dup2(command->out_pipe.write, STDOUT_FILENO);
+	close(command->in_pipe.read);
+	close(command->out_pipe.write);
+}
+
 void	exec_command(t_pipex_data *data, t_command *command)
 {
 	pid_t	fork_id;
 	int		fd;
 
 	fork_id = fork();
+	if (fork_id == -1)
+		safe_exit();
 	if (fork_id == 0)
 	{
-		close(command->in_pipe.write);
-		close(command->out_pipe.read);
-		dup2(command->in_pipe.read, STDIN_FILENO);
-		dup2(command->out_pipe.write, STDOUT_FILENO);
-		close(command->in_pipe.read);
-		close(command->out_pipe.write);
+		close_and_dup(command);
 		close_pipes_until_end(data, command);
 		if (command->error == -1)
 			execute_for_every_paths(data, command);
