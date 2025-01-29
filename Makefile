@@ -42,7 +42,9 @@ OBJS				=	$(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 OBJ_DIR				=	objects
 
-all : header $(FT_LIBC) $(OBJ_DIR)
+all : header $(NAME)
+
+$(NAME) : $(FT_LIBC) $(OBJ_DIR)
 	$(CC) $(CFLAGS) $(OBJS) $(FT_LIBC) -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.c
