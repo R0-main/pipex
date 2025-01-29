@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:39:23 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:35:26 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 10:43:59 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	handle_errors(t_pipex_data *data, t_command *command)
 		return ;
 	if (command->error == PERMISSION_DENIED)
 	{
-		ft_fprintf(STDERR_FILENO, "pipex: %s: Permission denied\n", command->error_allias);
+		ft_fprintf(STDERR_FILENO, "pipex: %s: Permission denied\n",
+			command->error_allias);
 	}
 	else if (command->error == NO_SUCH_FILE_OR_DIRECTORY)
 	{
