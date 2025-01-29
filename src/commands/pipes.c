@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 16:41:45 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 08:46:44 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ static t_pipe	get_out_pipe(t_pipex_data *data, t_command *command,
 	{
 		out_pipe.read = 0;
 		out_pipe.write = 0;
-		if (access(data->out_file, F_OK) == 0 && access(data->out_file, W_OK) ==
-			-1)
+		if (access(data->out_file, F_OK) == 0
+			&& access(data->out_file, W_OK) == -1)
 			add_error(command, PERMISSION_DENIED, data->out_file);
 		else
 		{

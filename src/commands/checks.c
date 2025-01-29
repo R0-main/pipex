@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 12:47:13 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 17:11:18 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 08:46:51 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static bool	can_execute_command(t_command *command)
 			return (true);
 	}
 	if (access(command->argv[0], F_OK) == 0)
-			return (true);
+		return (true);
 	return (false);
 }
 

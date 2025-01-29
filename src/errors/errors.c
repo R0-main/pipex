@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 09:39:23 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 13:12:01 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 08:47:01 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	add_error(t_command *command, t_command_errors error, char *allias)
 	command->error = error;
 	command->error_allias = allias;
 }
+
 void	print_commands_errors(t_pipex_data *data)
 {
 	t_list		*current;

@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 16:39:52 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 08:42:19 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,22 @@ static void	handle_here_doc(int argc, char const **argv, char const **envp,
 		t_pipex_data *data)
 {
 	char	*line;
+	size_t	line_len;
 	t_pipe	in_pipe;
 	int		i;
 
 	if (pipe((int *)(&in_pipe)) == -1)
 		safe_exit();
-	printf("heredoc PIPE : %d %d\n", in_pipe.read, in_pipe.write);
 	data->here_doc = true;
 	while (true)
 	{
 		line = get_next_line(1);
-		write(in_pipe.write, line, ft_strlen(line));
-		if (ft_strncmp(line, argv[2], ft_strlen(argv[2])) == 0)
+		line_len = ft_strlen(line);
+		write(in_pipe.write, line, line_len);
+		if (line_len > 1 && ft_strncmp(line, argv[2], line_len - 1) == 0)
 			break ;
 	}
 	free_garbadge();
-	close(in_pipe.write);
 	data->here_doc_pipe = in_pipe;
 }
 

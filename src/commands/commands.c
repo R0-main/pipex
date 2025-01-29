@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 17:11:02 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 08:39:55 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,6 @@ void	exec_command(t_pipex_data *data, t_command *command)
 	fork_id = fork();
 	if (fork_id == 0)
 	{
-		// printf("cmd : %s %s | ir : %d , iw : %d | or : %d , ow : %d\n",
-		// 	command->argv[0], command->argv[1], command->in_pipe.read,
-		// 	command->in_pipe.write, command->out_pipe.read,
-		// 	command->out_pipe.write);
 		close(command->in_pipe.write);
 		close(command->out_pipe.read);
 		dup2(command->in_pipe.read, STDIN_FILENO);
