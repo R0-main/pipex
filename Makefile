@@ -1,8 +1,8 @@
 # Main
 NAME				=	pipex
-CC					=	cc
+CC					=	gcc
 # -Wall -Werror -Wextra
-CFLAGS				=	-g3 -Idependencies/ft_libc/includes -Iincludes
+CFLAGS				=	-g3 -Wall -Werror -Wextra -Idependencies/ft_libc/includes -Iincludes -fPIE
 RM					=	rm -rf
 MAKE				=	make --no-print-directory -C
 

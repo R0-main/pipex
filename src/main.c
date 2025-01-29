@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:18:21 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:09:32 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include "get_next_line.h"
 #include "libft.h"
 #include "pipex.h"
-#include <string.h>
 #include <errno.h>
+#include <string.h>
 
 void	init_pipex_data(int argc, char const **argv, char const **envp,
 		t_pipex_data *data)
@@ -32,13 +32,11 @@ void	init_pipex_data(int argc, char const **argv, char const **envp,
 	data->here_doc = false;
 }
 
-static void	handle_here_doc(int argc, char const **argv, char const **envp,
-		t_pipex_data *data)
+static void	handle_here_doc(char const **argv, t_pipex_data *data)
 {
 	char	*line;
 	size_t	line_len;
 	t_pipe	in_pipe;
-	int		i;
 
 	if (pipe((int *)(&in_pipe)) == -1)
 		safe_exit();
@@ -74,7 +72,7 @@ int	main(int argc, char const **argv, char const **envp)
 	init_pipex_data(argc, argv, envp, &data);
 	if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0)
 	{
-		handle_here_doc(argc, argv, envp, &data);
+		handle_here_doc(argv, &data);
 		i++;
 	}
 	while (i < argc - 1)

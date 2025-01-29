@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 08:54:42 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:06:20 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:10:40 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct s_command	t_command;
 
 typedef enum e_command_errors
 {
+	NO_ERROR = -1,
 	PERMISSION_DENIED,
 	NO_SUCH_FILE_OR_DIRECTORY,
 	ERROR_OPENING_FILE,

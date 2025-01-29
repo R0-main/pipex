@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 08:26:50 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/28 09:44:57 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:12:25 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static void	handle_spaces(t_list **head, char *argv, int *i)
 
 static char	**tranfrom_list_to_array(t_list *head)
 {
-	t_list	*tmp;
 	char	**final;
 	int		args_count;
 
@@ -92,7 +91,6 @@ static char	**tranfrom_list_to_array(t_list *head)
 	while (head)
 	{
 		final[args_count++] = head->content;
-		tmp = head;
 		head = head->next;
 	}
 	final[args_count] = NULL;

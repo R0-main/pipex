@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 10:28:34 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:16:29 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static char	*get_full_path(const char *path)
 	return (ft_strjoin(path, "/"));
 }
 
-static void	execute_for_every_paths(t_pipex_data *data, t_command *command)
+static void	execute_for_every_paths(t_command *command)
 {
 	char	*command_name;
 	int		i;
@@ -86,7 +86,6 @@ void	close_and_dup(t_command *command)
 void	exec_command(t_pipex_data *data, t_command *command)
 {
 	pid_t	fork_id;
-	int		fd;
 
 	fork_id = fork();
 	if (fork_id == -1)
@@ -95,8 +94,8 @@ void	exec_command(t_pipex_data *data, t_command *command)
 	{
 		close_and_dup(command);
 		close_pipes_until_end(data, command);
-		if (command->error == -1)
-			execute_for_every_paths(data, command);
+		if (command->error == NO_ERROR)
+			execute_for_every_paths(command);
 		free_garbadge();
 		exit(EXIT_FAILURE);
 	}
