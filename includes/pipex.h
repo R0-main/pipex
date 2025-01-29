@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 09:52:26 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 11:31:19 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:07:32 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,7 @@ void			add_to_commands_queue(t_pipex_data *data, char *argv,
 					char **envp);
 void			init_commands_pipes(t_pipex_data *data);
 void			link_commands_pipes(t_pipex_data *data);
+
+void			safe_close(int fd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:47:58 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 11:11:09 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:21:56 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	add_to_commands_queue(t_pipex_data *data, char *argv, char **envp)
 	t_command	*command;
 	t_list		*lst;
 
+	if (!argv || !argv[0])
+		return ;
 	command = (t_command *)safe_malloc(sizeof(t_command));
 	command->error = NO_ERROR;
 	command->error_allias = NULL;

@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 14:10:44 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 13:06:10 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:07:25 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ void	close_pipes_until_end(t_pipex_data *data, t_command *target)
 	{
 		command = (t_command *)current->content;
 		if (command->in_pipe.read)
-			close(command->in_pipe.read);
+			safe_close(command->in_pipe.read);
 		if (command->in_pipe.write)
-			close(command->in_pipe.write);
+			safe_close(command->in_pipe.write);
 		current = current->next;
 	}
 	if (data->in_file_fd != -1)
-		close(data->in_file_fd);
+		safe_close(data->in_file_fd);
 	if (data->out_file_fd != -1)
-		close(data->out_file_fd);
+		safe_close(data->out_file_fd);
 }
 
 static char	*get_full_path(const char *path)
@@ -52,7 +52,7 @@ static char	*get_full_path(const char *path)
 	return (ft_strjoin(path, "/"));
 }
 
-static void	execute_for_every_paths( t_command *command)
+static void	execute_for_every_paths(t_command *command)
 {
 	char	*command_name;
 	int		i;
@@ -74,13 +74,13 @@ static void	execute_for_every_paths( t_command *command)
 void	close_and_dup(t_command *command)
 {
 	if (command->in_pipe.write)
-		close(command->in_pipe.write);
+		safe_close(command->in_pipe.write);
 	if (command->in_pipe.read)
-		close(command->out_pipe.read);
+		safe_close(command->out_pipe.read);
 	dup2(command->in_pipe.read, STDIN_FILENO);
 	dup2(command->out_pipe.write, STDOUT_FILENO);
-	close(command->in_pipe.read);
-	close(command->out_pipe.write);
+	safe_close(command->in_pipe.read);
+	safe_close(command->out_pipe.write);
 }
 
 void	exec_command(t_pipex_data *data, t_command *command)
@@ -102,11 +102,11 @@ void	exec_command(t_pipex_data *data, t_command *command)
 	else
 	{
 		if (command->in_pipe.write)
-			close(command->in_pipe.write);
+			safe_close(command->in_pipe.write);
 		if (command->in_pipe.read)
-			close(command->in_pipe.read);
+			safe_close(command->in_pipe.read);
 		if (command->out_pipe.write)
-			close(command->out_pipe.write);
+			safe_close(command->out_pipe.write);
 	}
 }
 // printf("cmd : %s %s | ir : %d , iw : %d | or : %d , ow : %d\n",

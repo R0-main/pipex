@@ -6,11 +6,12 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 12:59:43 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:29:36 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.h"
+#include "env.h"
 #include "ft_fprintf.h"
 #include "get_next_line.h"
 #include "libft.h"
@@ -54,31 +55,42 @@ static void	handle_here_doc(char const **argv, t_pipex_data *data)
 	data->here_doc_pipe = in_pipe;
 }
 
+void	parse_commands(int argc, char const **argv, char const **envp,
+		t_pipex_data *data)
+{
+	int	i;
+
+	i = 2;
+	if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0)
+	{
+		handle_here_doc(argv, data);
+		i++;
+	}
+	while (i < argc - 1)
+		add_to_commands_queue(data, (char *)argv[i++], (char **)envp);
+	proccess_command_queue(data);
+}
+
 int	main(int argc, char const **argv, char const **envp)
 {
 	t_pipex_data	data;
 	int				i;
 
-	i = 2;
 	if (argc < 5)
-	{
-		print_error("pipex: arguments: invalid number of arguments\n");
-		return (EXIT_FAILURE);
-	}
+		return (print_error("pipex: arguments: invalid number of arguments\n"),
+			EXIT_FAILURE);
+	i = 0;
+	while (argv[++i])
+		if (!argv[i] || !argv[i][0])
+			return (
+				print_error("pipex: arguments: on of the arguments is NULL\n"),
+				EXIT_FAILURE);
 	if (!envp)
-	{
-		print_error("pipex: environement: invalid environement\n");
-		return (EXIT_FAILURE);
-	}
+		return (print_error("pipex: environement: invalid environement\n"),
+			EXIT_FAILURE);
 	init_pipex_data(argc, argv, envp, &data);
-	if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0)
-	{
-		handle_here_doc(argv, &data);
-		i++;
-	}
-	while (i < argc - 1)
-		add_to_commands_queue(&data, (char *)argv[i++], (char **)envp);
-	proccess_command_queue(&data);
+	if (get_env("PATH", envp) != NULL)
+		parse_commands(argc, argv, envp, &data);
 	free_garbadge();
 	return (data.error_code);
 }

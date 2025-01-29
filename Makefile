@@ -34,7 +34,8 @@ SRCS				=	src/main.c\
 						src/errors/errors.c\
 						src/parsing/parsing.c\
 						src/parsing/utils.c\
-						src/env/variables.c
+						src/env/variables.c\
+						src/utils/safe_close.c
 
 SRC_COUNT			=	$(words $(SRCS))
 
