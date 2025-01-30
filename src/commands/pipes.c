@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 10:50:14 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 15:07:25 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/30 10:44:11 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ static t_pipe	get_out_pipe(t_pipex_data *data, t_command *command,
 	t_pipe	out_pipe;
 	int		options;
 
-	options = O_WRONLY | O_CREAT | O_TRUNC;
+	options = O_WRONLY | O_CREAT;
 	if (data->here_doc)
 		options = options | O_APPEND;
+	else
+		options = options | O_TRUNC;
 	if (!current->next)
 	{
-		out_pipe.read = 0;
-		out_pipe.write = 0;
+		ft_bzero(&out_pipe, sizeof(t_pipe));
 		if (access(data->out_file, F_OK) == 0
 			&& access(data->out_file, W_OK) == -1)
 			add_error(command, PERMISSION_DENIED, data->out_file);

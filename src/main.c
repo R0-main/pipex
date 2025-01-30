@@ -6,7 +6,7 @@
 /*   By: rguigneb <rguigneb@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 10:05:25 by rguigneb          #+#    #+#             */
-/*   Updated: 2025/01/29 15:29:36 by rguigneb         ###   ########.fr       */
+/*   Updated: 2025/01/30 10:43:09 by rguigneb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ static void	handle_here_doc(char const **argv, t_pipex_data *data)
 	{
 		line = get_next_line(1);
 		line_len = ft_strlen(line);
-		write(in_pipe.write, line, line_len);
 		if (line_len > 1 && ft_strncmp(line, argv[2], line_len - 1) == 0)
 			break ;
+		write(in_pipe.write, line, line_len);
 	}
 	free_garbadge();
 	data->here_doc_pipe = in_pipe;
